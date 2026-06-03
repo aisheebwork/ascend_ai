@@ -8,3 +8,4 @@ functions/_lib/metadata.bundle.json
 *.log
 .DS_Store
 .claude/
+.vscode/
