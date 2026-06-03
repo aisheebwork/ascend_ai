@@ -6,6 +6,8 @@ export type {
   PartitionFinding,
   Suggestion,
   Severity,
+  TableMetadata,
+  ColumnAttribute,
 } from "../functions/_lib/types";
 
 import type { AnalysisResult } from "../functions/_lib/types";

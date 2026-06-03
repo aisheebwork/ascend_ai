@@ -12,8 +12,15 @@ _Last updated: 2026-06-04_
 - Firestore rules; deployment + workflow docs.
 - `tsc --noEmit` clean; `vite build` succeeds.
 
+## Recent additions
+- **Add Metadata feature**: users upload Cornerstone-format metadata JSON in the
+  UI → parsed (`functions/_lib/parseMetadata.ts`) → stored in shared Firestore
+  `sharedMetadata` collection → merged into every analysis. Analyzer + function
+  now accept `extraTables`. New `MetadataManager` UI + `metadataStore.ts`.
+  Firestore rules updated (must be re-published). 10/10 tests pass.
+
 ## Work in progress
-- None — initial build complete.
+- None — feature complete.
 
 ## Pending / not yet done
 - Provide real Firebase config + `GEMINI_API_KEY` and run end-to-end (needs credentials).

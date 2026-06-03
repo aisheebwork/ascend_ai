@@ -85,6 +85,12 @@ You'll need it twice (as `VITE_FIREBASE_PROJECT_ID` and `FIREBASE_PROJECT_ID`).
    ```
 3. Click **Publish**.
 
+> **Re-publish whenever `firestore.rules` changes.** The rules now also cover a
+> shared **`sharedMetadata`** collection used by the "Add metadata" feature. If
+> you deployed an earlier version, copy the latest contents of
+> [`../firestore.rules`](../firestore.rules) into the Rules box and Publish
+> again — otherwise adding metadata will fail with a permissions error.
+
 ---
 
 ## PART C — Deploy on Cloudflare Pages (the actual website)
@@ -164,6 +170,27 @@ Set them for **Production** (and Preview if offered). Save.
 
 🎉 Done. Every time you (as aisheebwork) push to GitHub `main`, Cloudflare
 rebuilds and redeploys automatically.
+
+---
+
+## PART F — Add more metadata over time (no redeploy needed)
+
+The tool ships with the `triumph_transactions` metadata built in. To teach it
+about **more tables**, you (or any signed-in user) can add metadata JSON live:
+
+1. On the site, find the **"Metadata library"** card at the top.
+2. Click **Add metadata JSON** and pick one or more `.json` files in the **same
+   format** as the bundled metadata (the Cornerstone dataset shape with
+   `external_reference_details.table_name` and `schema.schema_attributes`).
+3. They're parsed, saved to a **shared library** (Firestore `sharedMetadata`),
+   and immediately merged into every future analysis — no rebuild/redeploy.
+4. Click **View tables** to see everything currently available (built-in + added).
+
+Notes:
+- Multi-part files for one table are merged automatically (columns deduped).
+- Re-uploading a table merges/updates it.
+- The library is **shared across all users** of your deployment, so the metadata
+  keeps improving for everyone.
 
 ---
 

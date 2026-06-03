@@ -1,6 +1,24 @@
 # SESSION LOG
 
-## 2026-06-04
+## 2026-06-04 (later) — Add Metadata feature
+
+### Contributor
+Claude Code
+
+### Completed
+- Added a live "Add metadata" feature: shared Firestore `sharedMetadata`
+  collection, `parseMetadata.ts` (raw Cornerstone JSON → normalized tables),
+  analyzer/function accept `extraTables`, `MetadataManager` UI + `metadataStore.ts`.
+- Updated Firestore rules (sharedMetadata). Added 4 tests (10 total, all pass).
+- Docs: STEP_BY_STEP Part F, TECHNICAL_DEBT DEBT-005, CURRENT_STATE.
+
+### Note
+- Firestore rules must be re-published for the new collection.
+- DEBT-005: client sends all shared metadata per request (fine at hackathon scale).
+
+---
+
+## 2026-06-04 — Initial build
 
 ### Contributor
 Claude Code

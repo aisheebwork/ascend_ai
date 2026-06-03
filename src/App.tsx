@@ -3,11 +3,20 @@ import { onAuthStateChanged, signOut, type User } from "firebase/auth";
 import { auth } from "./lib/firebase";
 import { analyzeSql } from "./lib/api";
 import { saveAnalysis, subscribeAnalyses } from "./lib/analyses";
+import {
+  subscribeMetadata,
+  toTableMetadata,
+  type StoredTable,
+} from "./lib/metadataStore";
+import { builtinTables } from "../functions/_lib/metadata";
 import type { AnalysisResult, AnalysisRecord } from "./types";
 import Login from "./components/Login";
 import SqlUploader from "./components/SqlUploader";
 import Results from "./components/Results";
 import HistoryPanel from "./components/HistoryPanel";
+import MetadataManager from "./components/MetadataManager";
+
+const BUILTIN_TABLE_NAMES = builtinTables().map((t) => t.tableName);
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -21,6 +30,7 @@ export default function App() {
 
   const [records, setRecords] = useState<AnalysisRecord[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
+  const [sharedTables, setSharedTables] = useState<StoredTable[]>([]);
 
   useEffect(() => {
     return onAuthStateChanged(auth, (u) => {
@@ -32,9 +42,15 @@ export default function App() {
   useEffect(() => {
     if (!user) {
       setRecords([]);
+      setSharedTables([]);
       return;
     }
-    return subscribeAnalyses(user.uid, setRecords);
+    const unsubAnalyses = subscribeAnalyses(user.uid, setRecords);
+    const unsubMeta = subscribeMetadata(setSharedTables);
+    return () => {
+      unsubAnalyses();
+      unsubMeta();
+    };
   }, [user]);
 
   async function handleAnalyze() {
@@ -43,7 +59,8 @@ export default function App() {
     setError(null);
     setActiveId(null);
     try {
-      const res = await analyzeSql(sql);
+      const extraTables = sharedTables.map(toTableMetadata);
+      const res = await analyzeSql(sql, extraTables);
       setResult(res);
       await saveAnalysis(user.uid, {
         fileName: fileName || "pasted.sql",
@@ -97,6 +114,11 @@ export default function App() {
 
       <main className="mx-auto grid max-w-6xl grid-cols-1 gap-5 px-6 py-6 lg:grid-cols-[1fr_280px]">
         <div className="space-y-5">
+          <MetadataManager
+            sharedTables={sharedTables}
+            builtinTableNames={BUILTIN_TABLE_NAMES}
+            userEmail={user.email ?? null}
+          />
           <SqlUploader
             sql={sql}
             fileName={fileName}

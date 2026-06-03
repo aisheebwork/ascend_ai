@@ -1,8 +1,9 @@
-import { getTable } from "./metadata";
+import { createTableResolver } from "./metadata";
 import type {
   AnalysisResult,
   PartitionFinding,
   PiiFinding,
+  TableMetadata,
 } from "./types";
 
 // NOTE (DEBT-001): This is a heuristic regex/token analyzer, not a full
@@ -74,7 +75,11 @@ function escapeRe(s: string): string {
  * Run the deterministic part of both flows (PII + partition) against a SQL
  * string. Produces structured findings; suggestion text is layered on later.
  */
-export function analyzeSql(sql: string): Omit<AnalysisResult, "suggestions" | "geminiUsed"> {
+export function analyzeSql(
+  sql: string,
+  extraTables: TableMetadata[] = []
+): Omit<AnalysisResult, "suggestions" | "geminiUsed"> {
+  const resolveTable = createTableResolver(extraTables);
   const clean = stripComments(sql);
   const cleanLower = clean.toLowerCase();
   const filterText = extractFilterText(sql);
@@ -88,7 +93,7 @@ export function analyzeSql(sql: string): Omit<AnalysisResult, "suggestions" | "g
   const seenTables = new Set<string>();
 
   for (const ref of refs) {
-    const meta = getTable(ref);
+    const meta = resolveTable(ref);
     if (!meta) {
       const segment = ref.replace(/`/g, "").split(".").pop() ?? ref;
       if (!unknownTables.includes(segment)) unknownTables.push(segment);
