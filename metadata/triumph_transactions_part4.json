@@ -1,0 +1,486 @@
+[
+  {
+    "version": "1.3",
+    "status": "ACTIVE",
+    "id": "e3629a7c-8a65-41fd-ab7c-44dfab864382",
+    "dataset_id": "e3629a7c-8a65-41fd-ab7c-44dfab864382",
+    "dataset_parent_id": "94b3697e-5157-40cd-b576-96d9f9bbad0c",
+    "ownership_id": "f6f8a110-580f-4229-b16c-81bc67d4533a",
+    "source_ingestion": null,
+    "schema": {
+      "version": "1.3",
+      "status": "ACTIVE",
+      "schema_id": "ba5893b5-5356-471a-8d60-936bbf84cc89",
+      "created_date": "2025-04-02T07:27:03.965+00:00",
+      "created_by": "API",
+      "updated_date": "2025-04-02T07:27:03.965+00:00",
+      "updated_by": "API",
+      "schema_parent_id": "9975de18-6ba9-403d-9a73-c06364bdec01",
+      "schema_attributes": [
+        {
+          "created_date": null,
+          "created_by": "API",
+          "updated_date": "2026-05-06T13:00:03.507+00:00",
+          "updated_by": "API",
+          "attribute_details": {
+            "aka_synonyms": "",
+            "attribute_desc": "Date transaction took place as defined by the acquiring member during initial transmission.",
+            "attribute_format": "yyyy-MM-dd",
+            "attribute_length": 10,
+            "attribute_name": "date_trans_1",
+            "attribute_position": 11,
+            "attribute_scale": 0,
+            "attribute_type": "DATE",
+            "business_name": "Transaction Presentment Date",
+            "business_rule": "",
+            "cluster_position": 0,
+            "default_values": "",
+            "derived_logic": "",
+            "end_range": null,
+            "is_clustered": false,
+            "is_derived": false,
+            "is_mandatory": false,
+            "is_partitioned": false,
+            "partition_position": 0,
+            "range_increment": null,
+            "sor_non_sor": "SOR",
+            "start_range": null
+          },
+          "external_reference_details": {
+            "id": 7798,
+            "name": "date_trans_1",
+            "source": "Cornerstone-CDM: attr_id",
+            "table_db_name": "cstonedb3",
+            "table_name": "triumph_transactions"
+          },
+          "sensitivity_details": {
+            "is_critical_data_element": false,
+            "is_dqm": true,
+            "is_gdpr": false,
+            "is_oncop": false,
+            "is_primary": false,
+            "is_sensitive": false,
+            "oncop_role_id": null,
+            "publish_code": 1
+          },
+          "recommend_details": {},
+          "cde_details": {
+            "activation_indicator": true,
+            "aemp_indicator": "Yes",
+            "owners": [
+              {
+                "role_name": "Data Steward",
+                "user_role_list": {
+                  "email_address": "Sarah.N.Mietlicki1@aexp.com",
+                  "full_name": "Sarah Mietlicki",
+                  "user_id": "smietli"
+                }
+              },
+              {
+                "role_name": "Data Steward Delegate",
+                "user_role_list": {
+                  "email_address": "ALAN.TOWNLEY@aexp.com",
+                  "full_name": "Alan Townley",
+                  "user_id": "atownley"
+                }
+              },
+              {
+                "role_name": "Data Steward Delegate",
+                "user_role_list": {
+                  "email_address": "Nouran.Abualam@aexp.com",
+                  "full_name": "Nouran Abualam",
+                  "user_id": "nabualam"
+                }
+              },
+              {
+                "role_name": "Data Executive Deputy",
+                "user_role_list": {
+                  "email_address": "matthew.r.nielsen@aexp.com",
+                  "full_name": "MatthewNielsen",
+                  "user_id": "mniels2"
+                }
+              }
+            ],
+            "data_classification": "AXP Restricted"
+          },
+          "attribute_name": "date_trans_1",
+          "is_meta_column": false,
+          "attribute_id": "1a92bd7a-0a67-49d9-8b3d-4cecff2e414c"
+        },
+        {
+          "created_date": null,
+          "created_by": "API",
+          "updated_date": "2025-05-26T19:41:50.837+00:00",
+          "updated_by": "API",
+          "attribute_details": {
+            "aka_synonyms": "",
+            "attribute_desc": "The transaction name that will be used by the communication mechanism to initiate the appropriate transaction.",
+            "attribute_format": "^[\\w\\s]*",
+            "attribute_length": 42,
+            "attribute_name": "desc_trans",
+            "attribute_position": 22,
+            "attribute_scale": 0,
+            "attribute_type": "STRING",
+            "business_name": "Statement Transaction Description",
+            "business_rule": "",
+            "cluster_position": 0,
+            "default_values": "",
+            "derived_logic": "",
+            "end_range": null,
+            "is_clustered": false,
+            "is_derived": false,
+            "is_mandatory": false,
+            "is_partitioned": false,
+            "partition_position": 0,
+            "range_increment": null,
+            "sor_non_sor": "SOR",
+            "start_range": null
+          },
+          "external_reference_details": {
+            "id": 7809,
+            "name": "desc_trans",
+            "source": "Cornerstone-CDM: attr_id",
+            "table_db_name": "cstonedb3",
+            "table_name": "triumph_transactions"
+          },
+          "sensitivity_details": {
+            "is_critical_data_element": false,
+            "is_dqm": null,
+            "is_gdpr": false,
+            "is_oncop": false,
+            "is_primary": false,
+            "is_sensitive": false,
+            "oncop_role_id": null,
+            "publish_code": 1
+          },
+          "recommend_details": {},
+          "cde_details": {},
+          "attribute_name": "desc_trans",
+          "is_meta_column": false,
+          "attribute_id": "b5182972-8665-4e77-b6e6-3912c868de7f"
+        },
+        {
+          "created_date": null,
+          "created_by": "API",
+          "updated_date": "2025-05-26T19:41:50.836+00:00",
+          "updated_by": "API",
+          "attribute_details": {
+            "aka_synonyms": "",
+            "attribute_desc": "BE LOC Transfer Indicator",
+            "attribute_format": "^[\\w\\s]*",
+            "attribute_length": 1,
+            "attribute_name": "indc_be_loc_xfer",
+            "attribute_position": 32,
+            "attribute_scale": 0,
+            "attribute_type": "STRING",
+            "business_name": "Be Loc Transfer Indicator",
+            "business_rule": "",
+            "cluster_position": 0,
+            "default_values": "",
+            "derived_logic": "",
+            "end_range": null,
+            "is_clustered": false,
+            "is_derived": false,
+            "is_mandatory": false,
+            "is_partitioned": false,
+            "partition_position": 0,
+            "range_increment": null,
+            "sor_non_sor": "SOR",
+            "start_range": null
+          },
+          "external_reference_details": {
+            "id": 7819,
+            "name": "indc_be_loc_xfer",
+            "source": "Cornerstone-CDM: attr_id",
+            "table_db_name": "cstonedb3",
+            "table_name": "triumph_transactions"
+          },
+          "sensitivity_details": {
+            "is_critical_data_element": false,
+            "is_dqm": true,
+            "is_gdpr": false,
+            "is_oncop": false,
+            "is_primary": false,
+            "is_sensitive": false,
+            "oncop_role_id": null,
+            "publish_code": 1
+          },
+          "recommend_details": {},
+          "cde_details": {},
+          "attribute_name": "indc_be_loc_xfer",
+          "is_meta_column": false,
+          "attribute_id": "255a661e-4a76-4c24-a14a-22c6b1aa3c03"
+        },
+        {
+          "created_date": null,
+          "created_by": "API",
+          "updated_date": "2025-05-26T19:41:50.836+00:00",
+          "updated_by": "API",
+          "attribute_details": {
+            "aka_synonyms": "",
+            "attribute_desc": "This field determines if the transaction is credit or debit",
+            "attribute_format": "^[\\w\\s]*",
+            "attribute_length": 1,
+            "attribute_name": "indc_cr_db",
+            "attribute_position": 23,
+            "attribute_scale": 0,
+            "attribute_type": "STRING",
+            "business_name": "Credit or Debit Indicator",
+            "business_rule": "",
+            "cluster_position": 0,
+            "default_values": "",
+            "derived_logic": "",
+            "end_range": null,
+            "is_clustered": false,
+            "is_derived": false,
+            "is_mandatory": false,
+            "is_partitioned": false,
+            "partition_position": 0,
+            "range_increment": null,
+            "sor_non_sor": "SOR",
+            "start_range": null
+          },
+          "external_reference_details": {
+            "id": 7810,
+            "name": "indc_cr_db",
+            "source": "Cornerstone-CDM: attr_id",
+            "table_db_name": "cstonedb3",
+            "table_name": "triumph_transactions"
+          },
+          "sensitivity_details": {
+            "is_critical_data_element": false,
+            "is_dqm": null,
+            "is_gdpr": false,
+            "is_oncop": false,
+            "is_primary": false,
+            "is_sensitive": false,
+            "oncop_role_id": null,
+            "publish_code": 1
+          },
+          "recommend_details": {},
+          "cde_details": {},
+          "attribute_name": "indc_cr_db",
+          "is_meta_column": false,
+          "attribute_id": "24df2b0f-91dc-4331-9da3-fc5ae476f927"
+        },
+        {
+          "created_date": null,
+          "created_by": "API",
+          "updated_date": "2025-05-26T19:41:50.837+00:00",
+          "updated_by": "API",
+          "attribute_details": {
+            "aka_synonyms": "",
+            "attribute_desc": "Purchase industry code",
+            "attribute_format": "^[\\w\\s]*",
+            "attribute_length": 3,
+            "attribute_name": "indst_prch_code",
+            "attribute_position": 35,
+            "attribute_scale": 0,
+            "attribute_type": "STRING",
+            "business_name": "Purchase Industry Code",
+            "business_rule": "",
+            "cluster_position": 0,
+            "default_values": "",
+            "derived_logic": "",
+            "end_range": null,
+            "is_clustered": false,
+            "is_derived": false,
+            "is_mandatory": false,
+            "is_partitioned": false,
+            "partition_position": 0,
+            "range_increment": null,
+            "sor_non_sor": "SOR",
+            "start_range": null
+          },
+          "external_reference_details": {
+            "id": 7822,
+            "name": "indst_prch_code",
+            "source": "Cornerstone-CDM: attr_id",
+            "table_db_name": "cstonedb3",
+            "table_name": "triumph_transactions"
+          },
+          "sensitivity_details": {
+            "is_critical_data_element": false,
+            "is_dqm": null,
+            "is_gdpr": false,
+            "is_oncop": false,
+            "is_primary": false,
+            "is_sensitive": false,
+            "oncop_role_id": null,
+            "publish_code": 1
+          },
+          "recommend_details": {},
+          "cde_details": {},
+          "attribute_name": "indst_prch_code",
+          "is_meta_column": false,
+          "attribute_id": "4ccdcff0-bf52-4482-a16f-9a4bca074df7"
+        },
+        {
+          "created_date": null,
+          "created_by": "API",
+          "updated_date": "2025-05-26T19:41:50.836+00:00",
+          "updated_by": "API",
+          "attribute_details": {
+            "aka_synonyms": "",
+            "attribute_desc": "This element defines a set of offering terms. It is a sequential system generated alphnumeric field that is added to the transaction during the qualification process.",
+            "attribute_format": "^[\\w\\s]*",
+            "attribute_length": 4,
+            "attribute_name": "nbr_offr_terms_id",
+            "attribute_position": 15,
+            "attribute_scale": 0,
+            "attribute_type": "STRING",
+            "business_name": "Offer Terms Id",
+            "business_rule": "",
+            "cluster_position": 0,
+            "default_values": "",
+            "derived_logic": "",
+            "end_range": null,
+            "is_clustered": false,
+            "is_derived": false,
+            "is_mandatory": false,
+            "is_partitioned": false,
+            "partition_position": 0,
+            "range_increment": null,
+            "sor_non_sor": "SOR",
+            "start_range": null
+          },
+          "external_reference_details": {
+            "id": 7802,
+            "name": "nbr_offr_terms_id",
+            "source": "Cornerstone-CDM: attr_id",
+            "table_db_name": "cstonedb3",
+            "table_name": "triumph_transactions"
+          },
+          "sensitivity_details": {
+            "is_critical_data_element": false,
+            "is_dqm": null,
+            "is_gdpr": false,
+            "is_oncop": false,
+            "is_primary": false,
+            "is_sensitive": false,
+            "oncop_role_id": null,
+            "publish_code": 1
+          },
+          "recommend_details": {},
+          "cde_details": {},
+          "attribute_name": "nbr_offr_terms_id",
+          "is_meta_column": false,
+          "attribute_id": "09a4bae0-2fce-418d-bee5-b3aeef5d60cc"
+        }
+      ]
+    },
+    "external_reference_details": {
+      "cdm_version": "2.0",
+      "id": 34,
+      "init_version": 2,
+      "source": "Cornerstone-CDM: storage_id",
+      "table_db_name": "cstonedb3",
+      "table_name": "triumph_transactions"
+    },
+    "display_name": "triumph_transactions",
+    "storage_type": "BigQuery",
+    "load_type": "LOAD_APPEND",
+    "dataset_source_details": {
+      "base_or_view": "Base",
+      "country": "UNITED STATES",
+      "dataset_name": "Data",
+      "feed_id": "wrt99",
+      "project_id": "@context.system/project_id",
+      "region": "NA (US/CAN)",
+      "require_partition_filter": true,
+      "table_name": "triumph_transactions"
+    },
+    "dataset_details": {
+      "business_name": "Triumph Transactions",
+      "business_unit": "AET",
+      "data_category": "Products & Services Performance",
+      "data_classification": "Account Receivable",
+      "data_desc": "Billed transaction details for the current cycle ",
+      "data_sub_category": "Card Payment Products and Add-on Services",
+      "data_type": "Foundational",
+      "feed_type": "Hydration",
+      "is_history_required": false,
+      "is_internal": true,
+      "is_sor_certified": true,
+      "is_temp": false,
+      "is_transactional": false,
+      "organized_logic": "",
+      "product": "US Cards (CPS & OPEN)",
+      "source_system": "TRIUMPH",
+      "source_system_desc": "Triumph",
+      "table_type": "Organized Raw"
+    },
+    "key_id": "NGBD-Foundational-Table-Reader",
+    "decommission_details": {
+      "comments": null,
+      "is_flagged": false,
+      "requested_by": null
+    },
+    "environment_details": {
+      "is_migrated_to_arena": null,
+      "is_migrated_to_prod": true,
+      "level": "GCP-DEV"
+    },
+    "additional_details": {},
+    "di_status": "DI Pending HS4",
+    "last_loaded": "2023-06-19T16:02:22.000+00:00",
+    "created_date": "2025-04-02T07:28:27.225+00:00",
+    "created_by": "API",
+    "updated_date": "2025-07-29T16:16:36.310+00:00",
+    "updated_by": "API",
+    "host_region": "USA",
+    "ownership_details": {
+      "status": "ACTIVE",
+      "ownership_id": "f6f8a110-580f-4229-b16c-81bc67d4533a",
+      "created_date": "2023-06-20T11:02:10.222+00:00",
+      "created_by": "API",
+      "updated_date": "2025-10-14T21:45:37.494+00:00",
+      "updated_by": "API",
+      "imr_queue": "gar_bdp_pa_prod_sup",
+      "aim_id": "137959725",
+      "business_unit": null,
+      "app_team_SN_workgroup": null,
+      "tech_recertification_date": "2025-09-15",
+      "business_recertification_date": "2025-09-15",
+      "tech_details_updated_date": "2025-09-15",
+      "business_details_updated_date": "2025-09-15",
+      "business_contacts": [
+        {
+          "email": "ANDREW.D.SPENCER@aexp.com",
+          "fullName": "AndrewSpencer",
+          "type": "di_business_owner_vp",
+          "user_name": null
+        },
+        {
+          "email": "Rakesh.Vasudevan@aexp.com",
+          "fullName": "RakeshVasudevan",
+          "type": "di_business_owner",
+          "user_name": null
+        }
+      ],
+      "tech_contacts": [
+        {
+          "email": "krishna.k.lingamneni@aexp.com",
+          "fullName": "Krishna Lingamneni",
+          "type": "di_tech_owner_vp",
+          "user_name": null
+        },
+        {
+          "email": "JAGJEET.DUHAN@aexp.com",
+          "fullName": "JagjeetDuhan",
+          "type": "di_tech_owner",
+          "user_name": null
+        }
+      ],
+      "application_team_contacts": [],
+      "impact_communication_owner_contacts": [],
+      "external_reference_details": {
+        "id": 34,
+        "source": "Cornerstone-CDM: storage_id",
+        "table_db_name": "cstonedb3",
+        "table_name": "triumph_transactions"
+      },
+      "use_case_distribution_group_email": null
+    }
+  }
+]

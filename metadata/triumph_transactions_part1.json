@@ -1,0 +1,488 @@
+[
+  {
+    "version": "1.3",
+    "status": "ACTIVE",
+    "id": "e3629a7c-8a65-41fd-ab7c-44dfab864382",
+    "dataset_id": "e3629a7c-8a65-41fd-ab7c-44dfab864382",
+    "dataset_parent_id": "94b3697e-5157-40cd-b576-96d9f9bbad0c",
+    "ownership_id": "f6f8a110-580f-4229-b16c-81bc67d4533a",
+    "source_ingestion": null,
+    "schema": {
+      "version": "1.3",
+      "status": "ACTIVE",
+      "schema_id": "ba5893b5-5356-471a-8d60-936bbf84cc89",
+      "created_date": "2025-04-02T07:27:03.965+00:00",
+      "created_by": "API",
+      "updated_date": "2025-04-02T07:27:03.965+00:00",
+      "updated_by": "API",
+      "schema_parent_id": "9975de18-6ba9-403d-9a73-c06364bdec01",
+      "schema_attributes": [
+        {
+          "created_date": null,
+          "created_by": "API",
+          "updated_date": "2025-05-26T19:41:50.837+00:00",
+          "updated_by": "API",
+          "attribute_details": {
+            "aka_synonyms": "",
+            "attribute_desc": "This is a generic address state to be used for any address in the system.",
+            "attribute_format": "^[\\w\\s]*",
+            "attribute_length": 2,
+            "attribute_name": "addr_state",
+            "attribute_position": 13,
+            "attribute_scale": 0,
+            "attribute_type": "STRING",
+            "business_name": "Address State",
+            "business_rule": "",
+            "cluster_position": 0,
+            "default_values": "",
+            "derived_logic": "",
+            "end_range": null,
+            "is_clustered": false,
+            "is_derived": false,
+            "is_mandatory": false,
+            "is_partitioned": false,
+            "partition_position": 0,
+            "range_increment": null,
+            "sor_non_sor": "SOR",
+            "start_range": null
+          },
+          "external_reference_details": {
+            "id": 7800,
+            "name": "addr_state",
+            "source": "Cornerstone-CDM: attr_id",
+            "table_db_name": "cstonedb3",
+            "table_name": "triumph_transactions"
+          },
+          "sensitivity_details": {
+            "is_critical_data_element": false,
+            "is_dqm": null,
+            "is_gdpr": false,
+            "is_oncop": false,
+            "is_primary": false,
+            "is_sensitive": false,
+            "oncop_role_id": null,
+            "publish_code": 1
+          },
+          "recommend_details": {},
+          "cde_details": {},
+          "attribute_name": "addr_state",
+          "is_meta_column": false,
+          "attribute_id": "7c915dc2-5c65-4f32-ae43-9098997ec4a9"
+        },
+        {
+          "created_date": null,
+          "created_by": "API",
+          "updated_date": "2026-05-07T10:56:14.892+00:00",
+          "updated_by": "API",
+          "attribute_details": {
+            "aka_synonyms": "",
+            "attribute_desc": "The dollar amount of the transaction.",
+            "attribute_format": "^[\\d]+?\\.?[\\d]*?$|^$",
+            "attribute_length": 13,
+            "attribute_name": "amt_trans",
+            "attribute_position": 12,
+            "attribute_scale": 0,
+            "attribute_type": "FLOAT64",
+            "business_name": "Transaction Billing Amount",
+            "business_rule": "",
+            "cluster_position": 0,
+            "default_values": "",
+            "derived_logic": "",
+            "end_range": null,
+            "is_clustered": false,
+            "is_derived": false,
+            "is_mandatory": false,
+            "is_partitioned": false,
+            "partition_position": 0,
+            "range_increment": null,
+            "sor_non_sor": "SOR",
+            "start_range": null
+          },
+          "external_reference_details": {
+            "id": 7799,
+            "name": "amt_trans",
+            "source": "Cornerstone-CDM: attr_id",
+            "table_db_name": "cstonedb3",
+            "table_name": "triumph_transactions"
+          },
+          "sensitivity_details": {
+            "is_critical_data_element": false,
+            "is_dqm": null,
+            "is_gdpr": false,
+            "is_oncop": false,
+            "is_primary": false,
+            "is_sensitive": false,
+            "oncop_role_id": null,
+            "publish_code": 1
+          },
+          "recommend_details": {},
+          "cde_details": {
+            "activation_indicator": true,
+            "aemp_indicator": "Yes",
+            "owners": [
+              {
+                "role_name": "Data Executive Deputy",
+                "user_role_list": {
+                  "email_address": "matthew.r.nielsen@aexp.com",
+                  "full_name": "MatthewNielsen",
+                  "user_id": "mniels2"
+                }
+              },
+              {
+                "role_name": "Data Steward",
+                "user_role_list": {
+                  "email_address": "Sarah.N.Mietlicki1@aexp.com",
+                  "full_name": "Sarah Mietlicki",
+                  "user_id": "smietli"
+                }
+              },
+              {
+                "role_name": "Data Steward Delegate",
+                "user_role_list": {
+                  "email_address": "ALAN.TOWNLEY@aexp.com",
+                  "full_name": "Alan Townley",
+                  "user_id": "atownley"
+                }
+              },
+              {
+                "role_name": "Data Steward Delegate",
+                "user_role_list": {
+                  "email_address": "Nouran.Abualam@aexp.com",
+                  "full_name": "Nouran Abualam",
+                  "user_id": "nabualam"
+                }
+              }
+            ],
+            "data_classification": "AXP Restricted"
+          },
+          "attribute_name": "amt_trans",
+          "is_meta_column": false,
+          "attribute_id": "24c50706-c35d-4e04-af5e-9b3f436ebb1b"
+        },
+        {
+          "created_date": null,
+          "created_by": "API",
+          "updated_date": "2025-05-26T19:41:50.837+00:00",
+          "updated_by": "API",
+          "attribute_details": {
+            "aka_synonyms": "",
+            "attribute_desc": "This is the number embossed on the plastic card assigned to each cardmember associated with an account.",
+            "attribute_format": "^[\\d]*$",
+            "attribute_length": 13,
+            "attribute_name": "cm13",
+            "attribute_position": 5,
+            "attribute_scale": 0,
+            "attribute_type": "STRING",
+            "business_name": "Plastic Number",
+            "business_rule": "",
+            "cluster_position": 0,
+            "default_values": "",
+            "derived_logic": "",
+            "end_range": null,
+            "is_clustered": false,
+            "is_derived": false,
+            "is_mandatory": false,
+            "is_partitioned": false,
+            "partition_position": 0,
+            "range_increment": null,
+            "sor_non_sor": "SOR",
+            "start_range": null
+          },
+          "external_reference_details": {
+            "id": 7793,
+            "name": "cm13",
+            "source": "Cornerstone-CDM: attr_id",
+            "table_db_name": "cstonedb3",
+            "table_name": "triumph_transactions"
+          },
+          "sensitivity_details": {
+            "is_critical_data_element": false,
+            "is_dqm": null,
+            "is_gdpr": false,
+            "is_oncop": false,
+            "is_primary": true,
+            "is_sensitive": true,
+            "oncop_role_id": null,
+            "pii_role_id": "NGBD-SDE-CM13",
+            "publish_code": 1
+          },
+          "recommend_details": {},
+          "cde_details": {},
+          "attribute_name": "cm13",
+          "is_meta_column": false,
+          "attribute_id": "d58fddae-d643-4221-ad45-3870aae982a1"
+        },
+        {
+          "created_date": null,
+          "created_by": "API",
+          "updated_date": "2025-05-26T19:41:50.837+00:00",
+          "updated_by": "API",
+          "attribute_details": {
+            "aka_synonyms": "",
+            "attribute_desc": "Cardholders Plastic number that made this charge",
+            "attribute_format": "^[\\d]*$",
+            "attribute_length": 15,
+            "attribute_name": "cm15",
+            "attribute_position": 17,
+            "attribute_scale": 0,
+            "attribute_type": "STRING",
+            "business_name": "Transaction Plastic",
+            "business_rule": "",
+            "cluster_position": 0,
+            "default_values": "",
+            "derived_logic": "",
+            "end_range": null,
+            "is_clustered": false,
+            "is_derived": false,
+            "is_mandatory": false,
+            "is_partitioned": false,
+            "partition_position": 0,
+            "range_increment": null,
+            "sor_non_sor": "SOR",
+            "start_range": null
+          },
+          "external_reference_details": {
+            "id": 7804,
+            "name": "cm15",
+            "source": "Cornerstone-CDM: attr_id",
+            "table_db_name": "cstonedb3",
+            "table_name": "triumph_transactions"
+          },
+          "sensitivity_details": {
+            "is_critical_data_element": false,
+            "is_dqm": null,
+            "is_gdpr": false,
+            "is_oncop": true,
+            "is_primary": false,
+            "is_sensitive": true,
+            "oncop_role_id": "PSU Issuer",
+            "pii_role_id": "NGBD-SDE-CM15",
+            "publish_code": 1
+          },
+          "recommend_details": {},
+          "cde_details": {},
+          "attribute_name": "cm15",
+          "is_meta_column": false,
+          "attribute_id": "6badfb89-cf0c-4941-aa64-cd1e0f698ee8"
+        },
+        {
+          "created_date": null,
+          "created_by": "API",
+          "updated_date": "2025-05-26T19:41:50.837+00:00",
+          "updated_by": "API",
+          "attribute_details": {
+            "aka_synonyms": "",
+            "attribute_desc": "This element stores the day of the month on which the account cycles. The field will allow the entry of the type of day on which the account cycles (i.e. business vs. calendar).",
+            "attribute_format": "^[\\w\\s]*",
+            "attribute_length": 3,
+            "attribute_name": "code_acct_cyc_day",
+            "attribute_position": 25,
+            "attribute_scale": 0,
+            "attribute_type": "STRING",
+            "business_name": "Account Cycle Date",
+            "business_rule": "",
+            "cluster_position": 0,
+            "default_values": "",
+            "derived_logic": "",
+            "end_range": null,
+            "is_clustered": false,
+            "is_derived": false,
+            "is_mandatory": false,
+            "is_partitioned": false,
+            "partition_position": 0,
+            "range_increment": null,
+            "sor_non_sor": "SOR",
+            "start_range": null
+          },
+          "external_reference_details": {
+            "id": 7812,
+            "name": "code_acct_cyc_day",
+            "source": "Cornerstone-CDM: attr_id",
+            "table_db_name": "cstonedb3",
+            "table_name": "triumph_transactions"
+          },
+          "sensitivity_details": {
+            "is_critical_data_element": false,
+            "is_dqm": true,
+            "is_gdpr": false,
+            "is_oncop": false,
+            "is_primary": false,
+            "is_sensitive": false,
+            "oncop_role_id": null,
+            "publish_code": 1
+          },
+          "recommend_details": {},
+          "cde_details": {},
+          "attribute_name": "code_acct_cyc_day",
+          "is_meta_column": false,
+          "attribute_id": "439cfe4f-d7a5-446c-ae17-df1cb3ea24d5"
+        },
+        {
+          "created_date": null,
+          "created_by": "API",
+          "updated_date": "2025-05-26T19:41:50.837+00:00",
+          "updated_by": "API",
+          "attribute_details": {
+            "aka_synonyms": "",
+            "attribute_desc": "This field is a code that specifies the current status of the account. The code will specify internal and external blocks. An external block is a permanent block; Closed, revoked, etc... An internal block is a temporary hold: Delq, Overlimit, etc",
+            "attribute_format": "^[\\w\\s]*",
+            "attribute_length": 2,
+            "attribute_name": "code_acct_stat",
+            "attribute_position": 26,
+            "attribute_scale": 0,
+            "attribute_type": "STRING",
+            "business_name": "Account Status",
+            "business_rule": "",
+            "cluster_position": 0,
+            "default_values": "",
+            "derived_logic": "",
+            "end_range": null,
+            "is_clustered": false,
+            "is_derived": false,
+            "is_mandatory": false,
+            "is_partitioned": false,
+            "partition_position": 0,
+            "range_increment": null,
+            "sor_non_sor": "SOR",
+            "start_range": null
+          },
+          "external_reference_details": {
+            "id": 7813,
+            "name": "code_acct_stat",
+            "source": "Cornerstone-CDM: attr_id",
+            "table_db_name": "cstonedb3",
+            "table_name": "triumph_transactions"
+          },
+          "sensitivity_details": {
+            "is_critical_data_element": false,
+            "is_dqm": null,
+            "is_gdpr": false,
+            "is_oncop": false,
+            "is_primary": false,
+            "is_sensitive": false,
+            "oncop_role_id": null,
+            "publish_code": 1
+          },
+          "recommend_details": {},
+          "cde_details": {},
+          "attribute_name": "code_acct_stat",
+          "is_meta_column": false,
+          "attribute_id": "62319b10-dfc6-4bad-9f14-d58e96e4bdc9"
+        }
+      ]
+    },
+    "external_reference_details": {
+      "cdm_version": "2.0",
+      "id": 34,
+      "init_version": 2,
+      "source": "Cornerstone-CDM: storage_id",
+      "table_db_name": "cstonedb3",
+      "table_name": "triumph_transactions"
+    },
+    "display_name": "triumph_transactions",
+    "storage_type": "BigQuery",
+    "load_type": "LOAD_APPEND",
+    "dataset_source_details": {
+      "base_or_view": "Base",
+      "country": "UNITED STATES",
+      "dataset_name": "Data",
+      "feed_id": "wrt99",
+      "project_id": "@context.system/project_id",
+      "region": "NA (US/CAN)",
+      "require_partition_filter": true,
+      "table_name": "triumph_transactions"
+    },
+    "dataset_details": {
+      "business_name": "Triumph Transactions",
+      "business_unit": "AET",
+      "data_category": "Products & Services Performance",
+      "data_classification": "Account Receivable",
+      "data_desc": "Billed transaction details for the current cycle ",
+      "data_sub_category": "Card Payment Products and Add-on Services",
+      "data_type": "Foundational",
+      "feed_type": "Hydration",
+      "is_history_required": false,
+      "is_internal": true,
+      "is_sor_certified": true,
+      "is_temp": false,
+      "is_transactional": false,
+      "organized_logic": "",
+      "product": "US Cards (CPS & OPEN)",
+      "source_system": "TRIUMPH",
+      "source_system_desc": "Triumph",
+      "table_type": "Organized Raw"
+    },
+    "key_id": "NGBD-Foundational-Table-Reader",
+    "decommission_details": {
+      "comments": null,
+      "is_flagged": false,
+      "requested_by": null
+    },
+    "environment_details": {
+      "is_migrated_to_arena": null,
+      "is_migrated_to_prod": true,
+      "level": "GCP-DEV"
+    },
+    "additional_details": {},
+    "di_status": "DI Pending HS4",
+    "last_loaded": "2023-06-19T16:02:22.000+00:00",
+    "created_date": "2025-04-02T07:28:27.225+00:00",
+    "created_by": "API",
+    "updated_date": "2025-07-29T16:16:36.310+00:00",
+    "updated_by": "API",
+    "host_region": "USA",
+    "ownership_details": {
+      "status": "ACTIVE",
+      "ownership_id": "f6f8a110-580f-4229-b16c-81bc67d4533a",
+      "created_date": "2023-06-20T11:02:10.222+00:00",
+      "created_by": "API",
+      "updated_date": "2025-10-14T21:45:37.494+00:00",
+      "updated_by": "API",
+      "imr_queue": "gar_bdp_pa_prod_sup",
+      "aim_id": "137959725",
+      "business_unit": null,
+      "app_team_SN_workgroup": null,
+      "tech_recertification_date": "2025-09-15",
+      "business_recertification_date": "2025-09-15",
+      "tech_details_updated_date": "2025-09-15",
+      "business_details_updated_date": "2025-09-15",
+      "business_contacts": [
+        {
+          "email": "ANDREW.D.SPENCER@aexp.com",
+          "fullName": "AndrewSpencer",
+          "type": "di_business_owner_vp",
+          "user_name": null
+        },
+        {
+          "email": "Rakesh.Vasudevan@aexp.com",
+          "fullName": "RakeshVasudevan",
+          "type": "di_business_owner",
+          "user_name": null
+        }
+      ],
+      "tech_contacts": [
+        {
+          "email": "krishna.k.lingamneni@aexp.com",
+          "fullName": "Krishna Lingamneni",
+          "type": "di_tech_owner_vp",
+          "user_name": null
+        },
+        {
+          "email": "JAGJEET.DUHAN@aexp.com",
+          "fullName": "JagjeetDuhan",
+          "type": "di_tech_owner",
+          "user_name": null
+        }
+      ],
+      "application_team_contacts": [],
+      "impact_communication_owner_contacts": [],
+      "external_reference_details": {
+        "id": 34,
+        "source": "Cornerstone-CDM: storage_id",
+        "table_db_name": "cstonedb3",
+        "table_name": "triumph_transactions"
+      },
+      "use_case_distribution_group_email": null
+    }
+  }
+]

@@ -1,0 +1,26 @@
+# DECISIONS
+
+## D-001 — Analysis logic runs in a Cloudflare Pages Function (not Firebase Functions)
+- **Decision:** Run the analyzer + Gemini call in a CF Pages Function; use Firebase only for Auth + Firestore.
+- **Reasoning:** Free-tier friendly (no Firebase Blaze required); keeps the Gemini key server-side; co-located with the frontend deploy.
+- **Alternatives:** Firebase Cloud Functions (needs Blaze for egress); client-side Gemini (exposes key — rejected).
+- **Consequences:** Backend split across two providers; ID tokens verified in the Worker via JWKS.
+
+## D-002 — Suggestions only, no SQL rewriting; no chat UI
+- **Decision:** The tool detects + advises; it does not rewrite or execute SQL, and has no chat.
+- **Reasoning:** Explicit user direction. Lower risk, clearer value (governance advice).
+- **Consequences:** "Previous chats" reinterpreted as per-user saved analysis history.
+
+## D-003 — Deterministic metadata lookup, not vector RAG
+- **Decision:** Exact metadata lookups (flags + SDE tags) feed Gemini; no embeddings.
+- **Reasoning:** Metadata is small and structured (one table, ~45 cols); exact lookups are precise and cheap.
+- **Consequences:** Adding tables = adding metadata JSON (builder already merges many tables).
+
+## D-004 — Firebase ID-token verification via `jose` + JWKS
+- **Decision:** Verify tokens against Google JWKS rather than the Admin SDK.
+- **Reasoning:** No service-account secret in the Worker; lightweight.
+- **Consequences:** No token-revocation check (DEBT-002).
+
+## D-005 — Stack: React + Vite + Tailwind
+- **Decision:** Vite SPA on Cloudflare Pages.
+- **Reasoning:** Standard, fast, well-supported on CF Pages.
