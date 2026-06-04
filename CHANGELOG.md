@@ -4,7 +4,19 @@ All notable changes to this project. Format groups: Added / Changed / Fixed /
 Deprecated / Removed / Security. Versioning: `MAJOR.MINOR.PATCH`.
 See [docs/RELEASE_NOTES.md](docs/RELEASE_NOTES.md) for detailed release notes.
 
-## [Unreleased]
+## [0.3.0] - 2026-06-04
+### Added
+- Admin area `/admin` (Google + passwordless email-link, allowlist in `functions/_lib/admins.ts`).
+- Share raw BQ SQL between admins (`sharedSql`); reformed-SQL examples for RAG (`reformedExamples`).
+- Reformed BQ SQL output: PII columns wrapped with `sde_decrypt('TAG', col)`, checkbox-selected
+  suggestions, download with smart filename. Deterministic + Gemini anomaly checks.
+- `public/_redirects` for SPA routing; ADR 007/008.
+### Changed
+- BQ SQL only (HQL removed). "Add metadata" moved to `/admin`. `sharedMetadata` writes admin-only.
+### Security
+- Admin allowlist + Firestore rules for `sharedSql`/`reformedExamples` (re-publish required).
+
+## [Unreleased - docs]
 ### Added
 - Full documentation-governance set (GLOSSARY, FEATURE_CATALOG, DATA_MODEL,
   SECURITY_MODEL, USER_FLOWS, PRODUCT_VISION, DOMAIN_KNOWLEDGE, RISK_REGISTER,

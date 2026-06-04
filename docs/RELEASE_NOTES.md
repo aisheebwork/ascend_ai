@@ -8,6 +8,20 @@ Versioning: `MAJOR.MINOR.PATCH` (see WORKFLOW_COMPANION_01.md).
 
 ---
 
+## 0.3.0 — 2026-06-04
+**Summary:** Admin area, reformed-SQL generator, BQ-only.
+- **Features added:** FEATURE-008 admin area (`/admin`, Google + passwordless email-link, allowlist);
+  FEATURE-009 share raw BQ SQL between admins; FEATURE-010 reformed-SQL examples (RAG);
+  FEATURE-011 reformed BQ SQL output (PII `sde_decrypt` wrapping) with checkbox-selected
+  suggestions + download (`<base>_reformed.sql` / `bq_sql_reformed.sql`); deterministic + Gemini anomaly checks.
+- **Changed:** Input is **BQ SQL only** (HQL removed). "Add metadata" moved from the main page to `/admin`.
+  `sharedMetadata` writes are now admin-only.
+- **Security:** New admin allowlist (`functions/_lib/admins.ts` + `firestore.rules`); rules added for
+  `sharedSql` and `reformedExamples`. **Re-publish rules.** Enable Firebase Email/Password + Email-link provider.
+- **Known issues:** reformed SQL is best-effort text rewriting (DEBT-001); allowlist in two files (DEBT-006).
+- **Migration notes:** Add admin emails to both files; re-publish `firestore.rules`; enable the email-link provider.
+- **Risks:** RISK-001, RISK-003. **Rollback:** revert to 0.2.0.
+
 ## 0.2.0 — 2026-06-04
 **Summary:** Live shared metadata library.
 - **Features added:** FEATURE-007 — "Add metadata" (upload Cornerstone JSON →

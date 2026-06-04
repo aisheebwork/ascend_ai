@@ -16,11 +16,11 @@ Status values: Proposed · Planned · In Progress · Implemented · Experimental
 - **Technical notes:** `src/components/Login.tsx`, `src/lib/firebase.ts`. ID token verified server-side.
 - **Known risks:** Authorized-domain config required (see USER_FLOWS failure paths).
 
-## FEATURE-002 — SQL/HQL upload & paste
-- **Description:** Paste SQL or upload/drag a `.sql`/`.hql` file for analysis.
+## FEATURE-002 — BQ SQL upload & paste
+- **Description:** Paste BigQuery SQL or upload/drag a `.sql` file for analysis. **BQ SQL only — HQL removed.**
 - **Status:** Implemented · **Priority:** High
-- **Dependencies:** — · **Related:** FEATURE-003/004/005
-- **User value:** Flexible input. **Technical notes:** `src/components/SqlUploader.tsx`.
+- **Dependencies:** — · **Related:** FEATURE-003/004/005/011
+- **User value:** Flexible input. **Technical notes:** `src/components/SqlUploader.tsx` (tracks uploaded vs pasted for download naming).
 
 ## FEATURE-003 — PII / sensitive column detection (Flow 1)
 - **Description:** Detect `is_sensitive` columns (with SDE `pii_role_id`) used in the query, flag those used in filter clauses.
@@ -53,6 +53,28 @@ Status values: Proposed · Planned · In Progress · Implemented · Experimental
 - **Technical notes:** `src/components/MetadataManager.tsx`, `src/lib/metadataStore.ts`, `sharedMetadata`.
 - **Known risks:** Any user can contribute (RISK-003); request size grows (DEBT-005).
 - **Future enhancements:** edit/remove tables, ownership, server-side metadata read.
+
+## FEATURE-008 — Admin area (`/admin`)
+- **Description:** Restricted admin page; admins sign in via Google or passwordless email link. Allowlist in `functions/_lib/admins.ts` (mirrored in `firestore.rules`).
+- **Status:** Implemented · **Priority:** High
+- **Dependencies:** Firebase Auth (Email link + Google) · **Technical notes:** `src/pages/Admin.tsx`, `src/components/AdminLogin.tsx`, `functions/_lib/admins.ts`.
+- **Known risks:** allowlist lives in two files (DEBT-006); email-link replaces the password flow.
+
+## FEATURE-009 — Share raw BQ SQL between admins
+- **Description:** Admins upload `.sql` files; other admins view & download them.
+- **Status:** Implemented · **Priority:** Medium
+- **Dependencies:** Firestore `sharedSql` · **Technical notes:** `src/components/admin/ShareSqlSection.tsx`, `src/lib/sharedSql.ts`.
+
+## FEATURE-010 — Reformed BQ SQL examples (RAG)
+- **Description:** Admins add original→reformed SQL examples; sent to the analyzer as Gemini style guidance.
+- **Status:** Implemented · **Priority:** Medium
+- **Dependencies:** Firestore `reformedExamples` · **Technical notes:** `src/components/admin/ReformedExamplesSection.tsx`, `src/lib/reformedExamples.ts`.
+
+## FEATURE-011 — Reformed SQL output + download
+- **Description:** Generates reformed BQ SQL wrapping PII columns with `sde_decrypt('TAG', col)`; users tick which suggestions to apply (PII decrypts applied inline, other suggestions added as review comments) and download. Filename: `<base>_reformed.sql` for uploads, else editable default `bq_sql_reformed.sql`.
+- **Status:** Implemented · **Priority:** High
+- **Dependencies:** `functions/_lib/reformer.ts` · **Related:** FEATURE-003/004/005
+- **Known risks:** text-based reform is best-effort (DEBT-001); decrypt UDF signature needs SME confirmation.
 
 ---
 

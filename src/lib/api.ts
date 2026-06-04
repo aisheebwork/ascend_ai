@@ -1,14 +1,16 @@
 import { auth } from "./firebase";
-import type { AnalysisResult, TableMetadata } from "../types";
+import type { AnalysisResult, ReformedExample, TableMetadata } from "../types";
 
 /**
  * Send SQL to the Cloudflare Pages Function for analysis. Attaches the current
- * user's Firebase ID token so the server can authorize the request, and any
- * user-added metadata tables to merge with the built-in governed metadata.
+ * user's Firebase ID token so the server can authorize the request, any
+ * user-added metadata tables to merge with the built-in governed metadata, and
+ * reformed-SQL examples used as RAG style guidance.
  */
 export async function analyzeSql(
   sql: string,
-  extraTables: TableMetadata[] = []
+  extraTables: TableMetadata[] = [],
+  examples: ReformedExample[] = []
 ): Promise<AnalysisResult> {
   const user = auth.currentUser;
   if (!user) throw new Error("Not signed in");
@@ -20,7 +22,7 @@ export async function analyzeSql(
       "Content-Type": "application/json",
       Authorization: `Bearer ${idToken}`,
     },
-    body: JSON.stringify({ sql, extraTables }),
+    body: JSON.stringify({ sql, extraTables, examples }),
   });
 
   if (!res.ok) {

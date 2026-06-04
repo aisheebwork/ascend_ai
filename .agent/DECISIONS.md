@@ -31,4 +31,14 @@
 - **Alternatives:** Per-user metadata (less useful); server-side Firestore read (needs Admin creds in Worker); rebuild bundle per upload (no live updates).
 - **Consequences:** Any user can add imperfect metadata (RISK-003); request grows with library (DEBT-005).
 
+## D-007 — Admin area with allowlist + passwordless email-link sign-in
+- **Decision:** `/admin` route gated by an email allowlist in `functions/_lib/admins.ts` (mirrored in `firestore.rules`). Admins sign in via Google or Firebase passwordless email link.
+- **Reasoning:** Simple, no extra user DB; email-link avoids password management. User chose email-link over email/password.
+- **Consequences:** No password/forced-change flow (passwordless). Allowlist lives in two files (DEBT-006). Requires enabling the Email/Password + Email-link provider in Firebase.
+
+## D-008 — Reformed SQL via text transform (sde_decrypt), suggestions only otherwise
+- **Decision:** Generate reformed BQ SQL by wrapping PII columns with `sde_decrypt('<pii_role_id>', col)`; other selected suggestions are added as review comments, not auto-rewritten.
+- **Reasoning:** PII decrypt is a safe, local transform; broader rewrites are risky without a real parser.
+- **Consequences:** Best-effort, review-required (DEBT-001). Decrypt UDF signature needs SME confirmation.
+
 > ADRs in `docs/adr/` mirror these decisions in the companion's ADR format.

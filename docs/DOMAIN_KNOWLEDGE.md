@@ -21,7 +21,9 @@ attributes. Key fields the tool relies on:
 - To compare/filter such a column correctly, it must be **decrypted** first.
 - Example sensitive columns: `cm13` (Plastic Number), `cm15` (Transaction Plastic).
 - `data_classification` (e.g. "AXP Restricted") indicates handling level.
-- **[Needs Human Validation]** the exact decrypt function/UDF name to use.
+- **Decrypt syntax** used by the reformer: `sde_decrypt('<pii_role_id>', <col>)`
+  — e.g. `sde_decrypt('NGBD-SDE-CM15', cm15)`. **[Needs Human Validation]** confirm
+  this matches the actual Amex UDF signature before relying on reformed SQL in production.
 
 ## 3. Partitioning in BigQuery
 - Large tables are partitioned by a column (here `date_stmt_yr`, an integer year).

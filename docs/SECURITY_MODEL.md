@@ -12,9 +12,15 @@
   (`functions/_lib/auth.ts`). No Firebase Admin SDK / service account in the Worker.
 
 ## Authorization
+- **Admin allowlist:** `functions/_lib/admins.ts` (app/UI gating), mirrored in
+  `firestore.rules` `isAdmin()` (DB enforcement). Keep the two in sync (DEBT-006).
+- **Admin sign-in:** Google or passwordless **email link** (`sendSignInLinkToEmail` /
+  `signInWithEmailLink`). No passwords (so no default-password/forced-change flow).
 - Firestore rules (`firestore.rules`):
   - `users/{uid}/analyses/**` — read/write only when `request.auth.uid == uid`.
-  - `sharedMetadata/**` — any authenticated user may read & create/update; **delete denied**.
+  - `sharedMetadata/**` — read: any signed-in user; create/update: **admins only**; no delete.
+  - `sharedSql/**` — read & create: **admins only**; no update/delete.
+  - `reformedExamples/**` — read: any signed-in user (RAG context); create: **admins only**; no delete.
 - The analyze endpoint rejects unauthenticated calls (401) and non-POST (405).
 
 ## Secrets management

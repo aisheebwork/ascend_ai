@@ -13,6 +13,17 @@ _Last updated: 2026-06-04_
 - `tsc --noEmit` clean; `vite build` succeeds.
 
 ## Recent additions
+- **v0.3.0 — Admin area + reformed SQL + BQ-only.** `/admin` route (Google +
+  passwordless email-link; allowlist `functions/_lib/admins.ts` mirrored in
+  `firestore.rules`) with 3 sections: metadata (moved off main page), share raw
+  BQ SQL between admins (`sharedSql`), reformed-SQL examples for RAG
+  (`reformedExamples`). Analyzer now also emits deterministic anomalies; Gemini
+  adds more + refines wording and uses examples as RAG context. Results page
+  generates reformed BQ SQL (PII → `sde_decrypt('TAG', col)`), checkbox-select
+  suggestions, download with smart filename. HQL removed (BQ SQL only).
+  `public/_redirects` added for SPA routing. 18/18 tests pass; build clean.
+
+## Earlier additions
 - **Add Metadata feature**: users upload Cornerstone-format metadata JSON in the
   UI → parsed (`functions/_lib/parseMetadata.ts`) → stored in shared Firestore
   `sharedMetadata` collection → merged into every analysis. Analyzer + function

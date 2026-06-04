@@ -6,8 +6,11 @@ export type {
   PartitionFinding,
   Suggestion,
   Severity,
+  SuggestionCategory,
+  AnomalyFinding,
   TableMetadata,
   ColumnAttribute,
+  ReformedExample,
 } from "../functions/_lib/types";
 
 import type { AnalysisResult } from "../functions/_lib/types";

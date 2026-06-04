@@ -51,12 +51,29 @@ export interface PartitionFinding {
 
 export type Severity = "high" | "medium" | "info";
 
+export type SuggestionCategory = "pii" | "partition" | "anomaly";
+
 export interface Suggestion {
+  /** stable id used for checkbox selection when building reformed SQL */
+  id: string;
   severity: Severity;
-  category: "pii" | "partition";
+  category: SuggestionCategory;
   table: string;
   column: string;
-  /** plain-language guidance — suggestion only, never a rewritten query */
+  /** plain-language guidance — suggestion only */
+  message: string;
+  /**
+   * For PII suggestions: the column + SDE tag to wrap with sde_decrypt() when
+   * this suggestion is selected for the reformed SQL. Absent for non-auto-fixes.
+   */
+  decrypt?: { column: string; tag: string } | null;
+}
+
+/** A non-PII, non-partition SQL anomaly (e.g. SELECT *, missing WHERE). */
+export interface AnomalyFinding {
+  id: string;
+  code: string; // e.g. "select_star", "no_where", "cross_join"
+  severity: Severity;
   message: string;
 }
 
@@ -66,7 +83,16 @@ export interface AnalysisResult {
   unknownTables: string[];
   piiFindings: PiiFinding[];
   partitionFindings: PartitionFinding[];
+  anomalies: AnomalyFinding[];
   suggestions: Suggestion[];
   /** true when Gemini produced the suggestion text; false = templated fallback */
   geminiUsed: boolean;
+}
+
+/** A reformed (corrected) BQ SQL example used to guide the RAG/Gemini layer. */
+export interface ReformedExample {
+  title: string;
+  originalSql: string;
+  reformedSql: string;
+  notes?: string;
 }

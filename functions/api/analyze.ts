@@ -2,7 +2,7 @@ import { analyzeSql } from "../_lib/analyzer";
 import { buildSuggestions } from "../_lib/gemini";
 import { verifyFirebaseToken, bearerToken } from "../_lib/auth";
 import { isTableMetadata } from "../_lib/parseMetadata";
-import type { AnalysisResult, TableMetadata } from "../_lib/types";
+import type { AnalysisResult, ReformedExample, TableMetadata } from "../_lib/types";
 
 // Cloudflare Pages Function environment bindings.
 interface Env {
@@ -17,6 +17,7 @@ interface PagesContext {
 
 const MAX_SQL_BYTES = 200_000; // guard against huge payloads
 const MAX_EXTRA_TABLES = 500; // cap user-supplied metadata tables per request
+const MAX_EXAMPLES = 10; // cap reformed-SQL RAG examples per request
 
 function json(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
@@ -46,11 +47,17 @@ export async function onRequestPost(ctx: PagesContext): Promise<Response> {
   // 2. Parse input.
   let sql: string;
   let extraTables: TableMetadata[] = [];
+  let examples: ReformedExample[] = [];
   try {
     const body: any = await request.json();
     sql = typeof body?.sql === "string" ? body.sql : "";
     if (Array.isArray(body?.extraTables)) {
       extraTables = body.extraTables.filter(isTableMetadata).slice(0, MAX_EXTRA_TABLES);
+    }
+    if (Array.isArray(body?.examples)) {
+      examples = body.examples
+        .filter((e: any) => e && typeof e.reformedSql === "string")
+        .slice(0, MAX_EXAMPLES);
     }
   } catch {
     return json({ error: "Invalid JSON body" }, 400);
@@ -68,7 +75,9 @@ export async function onRequestPost(ctx: PagesContext): Promise<Response> {
   // 4. Suggestion text (Gemini with deterministic fallback).
   const { suggestions, geminiUsed } = await buildSuggestions(
     findings,
-    env.GEMINI_API_KEY
+    env.GEMINI_API_KEY,
+    examples,
+    sql
   );
 
   const result: AnalysisResult = { ...findings, suggestions, geminiUsed };

@@ -4,7 +4,8 @@ interface Props {
   sql: string;
   fileName: string;
   busy: boolean;
-  onChange: (sql: string, fileName: string) => void;
+  /** wasUploaded = true when the current SQL came from a file (vs pasted) */
+  onChange: (sql: string, fileName: string, wasUploaded: boolean) => void;
   onAnalyze: () => void;
 }
 
@@ -20,7 +21,7 @@ export default function SqlUploader({
 
   async function readFile(file: File) {
     const text = await file.text();
-    onChange(text, file.name);
+    onChange(text, file.name, true);
   }
 
   return (
@@ -32,12 +33,12 @@ export default function SqlUploader({
             onClick={() => fileRef.current?.click()}
             className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
           >
-            Upload .sql / .hql
+            Upload .sql
           </button>
           <input
             ref={fileRef}
             type="file"
-            accept=".sql,.hql,.txt"
+            accept=".sql,.txt"
             className="hidden"
             onChange={(e) => {
               const f = e.target.files?.[0];
@@ -62,7 +63,7 @@ export default function SqlUploader({
       <textarea
         value={sql}
         spellCheck={false}
-        onChange={(e) => onChange(e.target.value, fileName || "pasted.sql")}
+        onChange={(e) => onChange(e.target.value, fileName, false)}
         onDragOver={(e) => {
           e.preventDefault();
           setDragOver(true);
@@ -74,7 +75,7 @@ export default function SqlUploader({
           const f = e.dataTransfer.files?.[0];
           if (f) readFile(f);
         }}
-        placeholder="Paste your BigQuery SQL here, or drop a .sql/.hql file…"
+        placeholder="Paste your BigQuery SQL here, or drop a .sql file…"
         className={`mt-3 h-72 w-full resize-y rounded-lg border p-3 font-mono text-sm outline-none ${
           dragOver ? "border-amex-blue ring-2 ring-amex-blue/30" : "border-slate-300"
         }`}

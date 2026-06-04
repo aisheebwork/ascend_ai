@@ -1,5 +1,29 @@
 # SESSION LOG
 
+## 2026-06-04 (v0.3.0) — Admin area, reformed SQL, BQ-only
+
+### Contributor
+Claude Code
+
+### Completed
+- `/admin` route + admin allowlist (`functions/_lib/admins.ts` + `firestore.rules`),
+  Google + passwordless email-link sign-in (`AdminLogin.tsx`, `Admin.tsx`).
+- Admin sections: metadata (moved off main), share raw BQ SQL (`sharedSql`),
+  reformed-SQL examples (`reformedExamples`) + their Firestore stores.
+- Reformer (`reformer.ts`): wrap PII with `sde_decrypt('TAG', col)`; Results page
+  reformed-SQL panel with checkbox-selected suggestions + download (smart filename).
+- Analyzer anomaly checks; Gemini refines wording + adds anomalies + uses examples (RAG).
+- Removed HQL (BQ SQL only); `public/_redirects` for SPA routing.
+- Docs: FEATURE-008..011, ADR 007/008, RELEASE/CHANGELOG 0.3.0, SECURITY/DATA_MODEL/DOMAIN updates,
+  TECHNICAL_DEBT DEBT-006, STEP_BY_STEP Part G.
+- 18/18 tests pass; tsc + vite build clean.
+
+### Note
+- Admin email-link replaces the requested default-password/forced-change flow (passwordless = no password).
+- Admin allowlist must be edited in TWO files (DEBT-006). Re-publish rules; enable Email-link provider.
+
+---
+
 ## 2026-06-04 (later) — Add Metadata feature
 
 ### Contributor

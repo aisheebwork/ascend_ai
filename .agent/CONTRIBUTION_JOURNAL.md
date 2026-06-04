@@ -18,6 +18,20 @@ Historical, traceable record of meaningful contributions. Newest first.
 - **Risk level:** Low (documentation only).
 - **Follow-up:** Keep these updated per the Documentation Update Matrix.
 
+## 2026-06-04 — v0.3.0: admin area, reformed SQL, BQ-only
+- **Contributor:** Claude Code · **Type:** AI (Claude)
+- **Task:** `/admin` (allowlist + Google/email-link), share SQL, reformed-SQL examples (RAG),
+  reformed BQ SQL output with `sde_decrypt` + checkbox suggestions + download, anomaly checks,
+  remove HQL, move metadata to admin.
+- **Files:** `functions/_lib/{admins,reformer,types,analyzer,gemini}.ts`, `functions/api/analyze.ts`,
+  `src/pages/Admin.tsx`, `src/components/{AdminLogin,Results,SqlUploader}.tsx`,
+  `src/components/admin/{ShareSqlSection,ReformedExamplesSection}.tsx`,
+  `src/lib/{sharedSql,reformedExamples,api,metadataStore}.ts`, `src/App.tsx`, `src/types.ts`,
+  `firestore.rules`, `public/_redirects`, `test/reformer.test.ts`, docs.
+- **Reason:** User-requested admin tooling + reformed-SQL generation; BQ-only scope.
+- **Risk:** Medium (auth + new collections; reformed SQL is best-effort — DEBT-001).
+- **Follow-up:** Confirm `sde_decrypt` UDF signature; single-source the admin allowlist (DEBT-006).
+
 ## 2026-06-04 — "Add metadata" feature
 - **Contributor:** Claude Code
 - **Contributor type:** AI (Claude)

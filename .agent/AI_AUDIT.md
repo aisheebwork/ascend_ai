@@ -11,6 +11,9 @@ Tracks AI-generated work, assumptions, and findings for transparency.
 | Shared (team-wide) metadata library, not per-user | "improve metadata for everyone" | Medium | ⚠️ Needs Human Validation (see RISK-003) |
 | Gemini model `gemini-2.0-flash` via REST | Current flash model | Low | ⚠️ Confirm model id/availability |
 | The provided Gemini key is a placeholder | Non-standard key format (`AQ.…` not `AIza…`) | Low | ⚠️ Tool falls back to rule-based if invalid |
+| `sde_decrypt('<pii_role_id>', col)` is the correct decrypt UDF | User selected this option | Medium | ⚠️ Needs SME confirmation before relying on reformed SQL |
+| Passwordless email-link is acceptable instead of password+forced-change | User chose email-link | Low | ✅ Confirmed (note: removes the password-change requirement) |
+| Reformed SQL via text transform is "good enough" (best-effort) | No SQL parser | Medium | ⚠️ Review reformed SQL before running (DEBT-001) |
 
 ## AI-generated content governance
 All code/docs here are AI-generated proposals; treat as drafts pending human

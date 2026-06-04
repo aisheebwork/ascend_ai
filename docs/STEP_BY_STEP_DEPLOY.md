@@ -173,12 +173,50 @@ rebuilds and redeploys automatically.
 
 ---
 
-## PART F — Add more metadata over time (no redeploy needed)
+## PART G — Admin area setup
+
+The app has a restricted **`/admin`** page (metadata management, share SQL,
+reformed-SQL examples). Set it up once:
+
+### G1. Add your admin email(s) — TWO places (keep them identical)
+1. **`functions/_lib/admins.ts`** — uncomment/add your emails:
+   ```ts
+   export const ADMIN_EMAILS: string[] = [
+     "your.name@accenture.com",
+   ];
+   ```
+2. **`firestore.rules`** — add the SAME emails (lowercased) inside `isAdmin()`:
+   ```
+   request.auth.token.email.lower() in [
+     'your.name@accenture.com'
+   ]
+   ```
+   Then re-publish rules (Firebase Console → Firestore → Rules → Publish), and
+   `git push` so Cloudflare rebuilds with the updated `admins.ts`.
+
+> Why two places: the app reads `admins.ts` (UI), and Firestore rules enforce it
+> at the database. Rules can't import TypeScript, so the list is mirrored.
+
+### G2. Enable admin sign-in methods in Firebase
+1. **Authentication → Sign-in method:** Google is already enabled (Part B2).
+2. Enable **Email/Password**, and in its settings toggle **Email link
+   (passwordless sign-in)** ON → Save. (This powers the "Send link" option.)
+3. **Authentication → Settings → Authorized domains:** your `*.pages.dev` domain
+   should already be there (Part D) — the email link redirects back to `/admin`.
+
+### G3. Use it
+- Go to `https://<your-site>/admin`, sign in with Google **or** request an email
+  sign-in link. Only allowlisted emails get access; others see "Not authorized".
+- Sections: **Add metadata JSON**, **Share raw BQ SQL**, **Reformed SQL examples**.
+
+---
+
+## PART F — Add more metadata over time (now under /admin)
 
 The tool ships with the `triumph_transactions` metadata built in. To teach it
-about **more tables**, you (or any signed-in user) can add metadata JSON live:
+about **more tables**, an **admin** adds metadata JSON live (now under `/admin`):
 
-1. On the site, find the **"Metadata library"** card at the top.
+1. Go to `https://<your-site>/admin` (admins only) → **Metadata library** card.
 2. Click **Add metadata JSON** and pick one or more `.json` files in the **same
    format** as the bundled metadata (the Cornerstone dataset shape with
    `external_reference_details.table_name` and `schema.schema_attributes`).
@@ -189,8 +227,8 @@ about **more tables**, you (or any signed-in user) can add metadata JSON live:
 Notes:
 - Multi-part files for one table are merged automatically (columns deduped).
 - Re-uploading a table merges/updates it.
-- The library is **shared across all users** of your deployment, so the metadata
-  keeps improving for everyone.
+- Adding is **admin-only**; the resulting library is **read by all users'**
+  analyses, so the metadata keeps improving for everyone.
 
 ---
 

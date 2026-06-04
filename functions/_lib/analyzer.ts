@@ -1,6 +1,7 @@
 import { createTableResolver } from "./metadata";
 import type {
   AnalysisResult,
+  AnomalyFinding,
   PartitionFinding,
   PiiFinding,
   TableMetadata,
@@ -72,6 +73,60 @@ function escapeRe(s: string): string {
 }
 
 /**
+ * Deterministic, metadata-independent BQ SQL anomaly checks (beyond PII +
+ * partition). Conservative — only flags clear smells. Gemini may add more.
+ */
+export function detectAnomalies(sql: string): AnomalyFinding[] {
+  const clean = stripComments(sql);
+  const lower = clean.toLowerCase();
+  const out: AnomalyFinding[] = [];
+
+  // SELECT * — discourages full-column scans / unstable schemas.
+  if (/\bselect\s+\*/i.test(clean) || /\bselect\s+[\w.]+\.\*/i.test(clean)) {
+    out.push({
+      id: "anomaly:select_star",
+      code: "select_star",
+      severity: "medium",
+      message:
+        "Query uses SELECT * — select only the columns you need to reduce bytes scanned and avoid breaking on schema changes.",
+    });
+  }
+
+  // CROSS JOIN or comma-join (cartesian product risk).
+  if (/\bcross\s+join\b/i.test(clean)) {
+    out.push({
+      id: "anomaly:cross_join",
+      code: "cross_join",
+      severity: "high",
+      message: "Query uses CROSS JOIN — confirm the cartesian product is intended.",
+    });
+  }
+
+  // No WHERE clause at all (and not a trivial query) — possible full scan.
+  if (/\bfrom\b/i.test(lower) && !/\bwhere\b/i.test(lower)) {
+    out.push({
+      id: "anomaly:no_where",
+      code: "no_where",
+      severity: "medium",
+      message:
+        "Query has no WHERE filter — verify a full-table scan is intended (and add a partition filter where required).",
+    });
+  }
+
+  // LIMIT without ORDER BY — non-deterministic sampling.
+  if (/\blimit\b/i.test(lower) && !/\border\s+by\b/i.test(lower)) {
+    out.push({
+      id: "anomaly:limit_no_order",
+      code: "limit_no_order",
+      severity: "info",
+      message: "LIMIT without ORDER BY returns a non-deterministic subset of rows.",
+    });
+  }
+
+  return out;
+}
+
+/**
  * Run the deterministic part of both flows (PII + partition) against a SQL
  * string. Produces structured findings; suggestion text is layered on later.
  */
@@ -80,6 +135,7 @@ export function analyzeSql(
   extraTables: TableMetadata[] = []
 ): Omit<AnalysisResult, "suggestions" | "geminiUsed"> {
   const resolveTable = createTableResolver(extraTables);
+  const anomalies = detectAnomalies(sql);
   const clean = stripComments(sql);
   const cleanLower = clean.toLowerCase();
   const filterText = extractFilterText(sql);
@@ -131,5 +187,5 @@ export function analyzeSql(
     }
   }
 
-  return { detectedTables, unknownTables, piiFindings, partitionFindings };
+  return { detectedTables, unknownTables, piiFindings, partitionFindings, anomalies };
 }

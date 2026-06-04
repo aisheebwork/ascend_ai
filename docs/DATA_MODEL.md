@@ -40,7 +40,15 @@ Normalized from raw Cornerstone metadata by `parseMetadata.ts` / `build-metadata
 ### Firestore — `sharedMetadata/{tableId}`
 - `tableId` = sanitized lowercased table name (dedup key).
 - `{ tableName, displayName, dbName, requirePartitionFilter, attributes, addedByEmail, updatedAt }`
-- **Owner:** shared/team. **Access:** any signed-in user may read & create/update; **no delete** (rules). **Lifecycle:** grows over time; re-upload merges attributes.
+- **Owner:** shared/team. **Access:** read = any signed-in user; create/update = **admins only**; **no delete**. **Lifecycle:** grows over time; re-upload merges attributes. (Adding moved to `/admin`.)
+
+### Firestore — `sharedSql/{id}`
+- `{ fileName, sqlText, uploadedByEmail, createdAt }`
+- **Owner:** admins. **Access:** read & create = **admins only**; no update/delete. **Purpose:** admins share raw BQ SQL for cross-testing/download (FEATURE-009).
+
+### Firestore — `reformedExamples/{id}`
+- `{ title, originalSql, reformedSql, notes, addedByEmail, createdAt }`
+- **Owner:** admins. **Access:** read = any signed-in user (sent to analyzer as RAG context); create = **admins only**; no delete. **Purpose:** guide Gemini's suggestion style (FEATURE-010).
 
 ## Relationships
 ```

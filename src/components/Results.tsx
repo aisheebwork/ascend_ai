@@ -1,4 +1,6 @@
+import { useEffect, useMemo, useState } from "react";
 import type { AnalysisResult, Severity } from "../types";
+import { buildReformedSql } from "../../functions/_lib/reformer";
 
 const sevStyle: Record<Severity, string> = {
   high: "border-red-300 bg-red-50 text-red-800",
@@ -18,9 +20,68 @@ function Badge({ ok, yes, no }: { ok: boolean; yes: string; no: string }) {
   );
 }
 
-export default function Results({ result }: { result: AnalysisResult }) {
+function defaultReformedName(fileName: string, wasUploaded: boolean): string {
+  if (wasUploaded && fileName) {
+    const base = fileName.replace(/\.[^.]+$/, "");
+    return `${base}_reformed.sql`;
+  }
+  return "bq_sql_reformed.sql";
+}
+
+interface Props {
+  result: AnalysisResult;
+  sql: string;
+  fileName: string;
+  wasUploaded: boolean;
+}
+
+export default function Results({ result, sql, fileName, wasUploaded }: Props) {
   const { detectedTables, unknownTables, piiFindings, partitionFindings, suggestions, geminiUsed } =
     result;
+
+  // Checkbox selection per suggestion id. Default: everything except pure "info".
+  const [selected, setSelected] = useState<Record<string, boolean>>({});
+  const [downloadName, setDownloadName] = useState("");
+
+  useEffect(() => {
+    const init: Record<string, boolean> = {};
+    for (const s of suggestions) init[s.id] = s.severity !== "info";
+    setSelected(init);
+    setDownloadName(defaultReformedName(fileName, wasUploaded));
+  }, [result]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const reformedSql = useMemo(() => {
+    const piiDecrypts = suggestions
+      .filter((s) => selected[s.id] && s.category === "pii" && s.decrypt)
+      .map((s) => s.decrypt!) as { column: string; tag: string }[];
+    const annotations = suggestions
+      .filter((s) => selected[s.id] && (s.category === "partition" || s.category === "anomaly"))
+      .map((s) => s.message);
+    return buildReformedSql(sql, { piiDecrypts, annotations });
+  }, [sql, suggestions, selected]);
+
+  function toggle(id: string) {
+    setSelected((prev) => ({ ...prev, [id]: !prev[id] }));
+  }
+
+  function download() {
+    const name = (downloadName.trim() || defaultReformedName(fileName, wasUploaded)).replace(
+      /[^\w.\-]/g,
+      "_"
+    );
+    const finalName = name.endsWith(".sql") ? name : `${name}.sql`;
+    const blob = new Blob([reformedSql], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = finalName;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function copyReformed() {
+    navigator.clipboard?.writeText(reformedSql).catch(() => {});
+  }
 
   return (
     <div className="space-y-5">
@@ -29,24 +90,15 @@ export default function Results({ result }: { result: AnalysisResult }) {
         <h3 className="text-base font-semibold text-slate-800">Detected tables</h3>
         <div className="mt-2 flex flex-wrap gap-2">
           {detectedTables.length === 0 && (
-            <span className="text-sm text-slate-500">
-              No governed tables matched in the SQL.
-            </span>
+            <span className="text-sm text-slate-500">No governed tables matched in the SQL.</span>
           )}
           {detectedTables.map((t) => (
-            <span
-              key={t}
-              className="rounded-lg bg-amex-blue/10 px-2.5 py-1 text-sm font-medium text-amex-dark"
-            >
+            <span key={t} className="rounded-lg bg-amex-blue/10 px-2.5 py-1 text-sm font-medium text-amex-dark">
               {t}
             </span>
           ))}
           {unknownTables.map((t) => (
-            <span
-              key={t}
-              title="Not found in governed metadata"
-              className="rounded-lg bg-slate-100 px-2.5 py-1 text-sm text-slate-500"
-            >
+            <span key={t} title="Not found in governed metadata" className="rounded-lg bg-slate-100 px-2.5 py-1 text-sm text-slate-500">
               {t} (unknown)
             </span>
           ))}
@@ -57,9 +109,7 @@ export default function Results({ result }: { result: AnalysisResult }) {
       <section className="rounded-2xl bg-white p-5 shadow-sm">
         <h3 className="text-base font-semibold text-slate-800">PII / sensitive columns</h3>
         {piiFindings.length === 0 ? (
-          <p className="mt-2 text-sm text-slate-500">
-            No sensitive columns from governed metadata are used in this query.
-          </p>
+          <p className="mt-2 text-sm text-slate-500">No sensitive columns from governed metadata are used in this query.</p>
         ) : (
           <table className="mt-3 w-full text-sm">
             <thead>
@@ -119,30 +169,64 @@ export default function Results({ result }: { result: AnalysisResult }) {
         )}
       </section>
 
-      {/* Suggestions */}
+      {/* Suggestions with checkboxes */}
       <section className="rounded-2xl bg-white p-5 shadow-sm">
         <div className="flex items-center justify-between">
-          <h3 className="text-base font-semibold text-slate-800">Suggested edits</h3>
-          <span className="text-xs text-slate-400">
-            {geminiUsed ? "AI-assisted (Gemini)" : "rule-based"}
-          </span>
+          <h3 className="text-base font-semibold text-slate-800">
+            Suggested edits <span className="text-xs font-normal text-slate-400">(tick the ones to apply)</span>
+          </h3>
+          <span className="text-xs text-slate-400">{geminiUsed ? "AI-assisted (Gemini)" : "rule-based"}</span>
         </div>
         {suggestions.length === 0 ? (
-          <p className="mt-2 text-sm text-emerald-700">
-            No issues found. Nothing to change.
-          </p>
+          <p className="mt-2 text-sm text-emerald-700">No issues found. Nothing to change.</p>
         ) : (
           <ul className="mt-3 space-y-2">
-            {suggestions.map((s, i) => (
-              <li key={i} className={`rounded-lg border p-3 text-sm ${sevStyle[s.severity]}`}>
-                <span className="mr-2 rounded px-1.5 py-0.5 text-xs font-bold uppercase">
-                  {s.category}
+            {suggestions.map((s) => (
+              <li key={s.id} className={`flex gap-3 rounded-lg border p-3 text-sm ${sevStyle[s.severity]}`}>
+                <input
+                  type="checkbox"
+                  className="mt-0.5 h-4 w-4 shrink-0"
+                  checked={!!selected[s.id]}
+                  onChange={() => toggle(s.id)}
+                />
+                <span>
+                  <span className="mr-2 rounded bg-white/60 px-1.5 py-0.5 text-xs font-bold uppercase">
+                    {s.category}
+                  </span>
+                  {s.message}
                 </span>
-                {s.message}
               </li>
             ))}
           </ul>
         )}
+      </section>
+
+      {/* Reformed SQL */}
+      <section className="rounded-2xl bg-white p-5 shadow-sm">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h3 className="text-base font-semibold text-slate-800">Reformed BigQuery SQL</h3>
+          <div className="flex items-center gap-2">
+            <input
+              value={downloadName}
+              onChange={(e) => setDownloadName(e.target.value)}
+              className="w-56 rounded-lg border border-slate-300 px-2 py-1.5 text-sm"
+              title={wasUploaded ? "Prefilled from your uploaded file" : "Set a file name for download"}
+            />
+            <button onClick={copyReformed} className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50">
+              Copy
+            </button>
+            <button onClick={download} className="rounded-lg bg-amex-blue px-4 py-1.5 text-sm font-semibold text-white hover:bg-amex-dark">
+              Download
+            </button>
+          </div>
+        </div>
+        <p className="mt-1 text-xs text-slate-500">
+          PII columns are wrapped with <code>sde_decrypt(&apos;SDE_TAG&apos;, col)</code>. Other ticked
+          suggestions are added as review comments. Review before running.
+        </p>
+        <pre className="mt-3 max-h-96 overflow-auto rounded-lg bg-slate-900 p-3 font-mono text-xs leading-relaxed text-slate-100">
+          {reformedSql}
+        </pre>
       </section>
     </div>
   );
