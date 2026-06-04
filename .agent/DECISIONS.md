@@ -24,3 +24,11 @@
 ## D-005 — Stack: React + Vite + Tailwind
 - **Decision:** Vite SPA on Cloudflare Pages.
 - **Reasoning:** Standard, fast, well-supported on CF Pages.
+
+## D-006 — Shared (team-wide) metadata library in Firestore
+- **Decision:** User-added metadata is stored in a shared `sharedMetadata` collection (any signed-in user can read & add; no delete) and sent to the function as `extraTables` per request.
+- **Reasoning:** Goal is a collectively improving knowledge base; keeps the Function stateless (no Firebase credentials in the Worker).
+- **Alternatives:** Per-user metadata (less useful); server-side Firestore read (needs Admin creds in Worker); rebuild bundle per upload (no live updates).
+- **Consequences:** Any user can add imperfect metadata (RISK-003); request grows with library (DEBT-005).
+
+> ADRs in `docs/adr/` mirror these decisions in the companion's ADR format.
