@@ -1,5 +1,5 @@
 import { analyzeSql } from "../_lib/analyzer";
-import { buildSuggestions } from "../_lib/gemini";
+import { buildSuggestions, generateReformedSql } from "../_lib/gemini";
 import { verifyFirebaseToken, bearerToken } from "../_lib/auth";
 import { isTableMetadata } from "../_lib/parseMetadata";
 import type { AnalysisResult, ReformedExample, TableMetadata } from "../_lib/types";
@@ -72,15 +72,13 @@ export async function onRequestPost(ctx: PagesContext): Promise<Response> {
   // 3. Deterministic analysis (both flows), merging any user-added metadata.
   const findings = analyzeSql(sql, extraTables);
 
-  // 4. Suggestion text (Gemini with deterministic fallback).
-  const { suggestions, geminiUsed } = await buildSuggestions(
-    findings,
-    env.GEMINI_API_KEY,
-    examples,
-    sql
-  );
+  // 4. Suggestion text + example-driven reformed SQL (Gemini, with fallbacks).
+  const [{ suggestions, geminiUsed }, aiReformedSql] = await Promise.all([
+    buildSuggestions(findings, env.GEMINI_API_KEY, examples, sql),
+    generateReformedSql(sql, findings, examples, env.GEMINI_API_KEY),
+  ]);
 
-  const result: AnalysisResult = { ...findings, suggestions, geminiUsed };
+  const result: AnalysisResult = { ...findings, suggestions, geminiUsed, aiReformedSql };
   return json(result);
 }
 

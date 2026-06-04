@@ -42,15 +42,21 @@ export default function Results({ result, sql, fileName, wasUploaded }: Props) {
   // Checkbox selection per suggestion id. Default: everything except pure "info".
   const [selected, setSelected] = useState<Record<string, boolean>>({});
   const [downloadName, setDownloadName] = useState("");
+  // Which reformed-SQL source to show/download.
+  const [reformMode, setReformMode] = useState<"ai" | "rules">("rules");
+
+  const hasAi = !!result.aiReformedSql && result.aiReformedSql.trim().length > 0;
 
   useEffect(() => {
     const init: Record<string, boolean> = {};
     for (const s of suggestions) init[s.id] = s.severity !== "info";
     setSelected(init);
     setDownloadName(defaultReformedName(fileName, wasUploaded));
+    // Prefer the example-driven AI version when available.
+    setReformMode(result.aiReformedSql ? "ai" : "rules");
   }, [result]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const reformedSql = useMemo(() => {
+  const ruleReformedSql = useMemo(() => {
     const piiDecrypts = suggestions
       .filter((s) => selected[s.id] && s.category === "pii" && s.decrypt)
       .map((s) => s.decrypt!) as { column: string; tag: string }[];
@@ -59,6 +65,8 @@ export default function Results({ result, sql, fileName, wasUploaded }: Props) {
       .map((s) => s.message);
     return buildReformedSql(sql, { piiDecrypts, annotations });
   }, [sql, suggestions, selected]);
+
+  const reformedSql = reformMode === "ai" && hasAi ? result.aiReformedSql! : ruleReformedSql;
 
   function toggle(id: string) {
     setSelected((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -204,7 +212,25 @@ export default function Results({ result, sql, fileName, wasUploaded }: Props) {
       {/* Reformed SQL */}
       <section className="rounded-2xl bg-white p-5 shadow-sm">
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <h3 className="text-base font-semibold text-slate-800">Reformed BigQuery SQL</h3>
+          <div className="flex items-center gap-3">
+            <h3 className="text-base font-semibold text-slate-800">Reformed BigQuery SQL</h3>
+            {hasAi && (
+              <div className="flex overflow-hidden rounded-lg border border-slate-300 text-xs">
+                <button
+                  onClick={() => setReformMode("ai")}
+                  className={reformMode === "ai" ? "bg-amex-blue px-2.5 py-1 text-white" : "px-2.5 py-1 text-slate-600"}
+                >
+                  AI (your examples)
+                </button>
+                <button
+                  onClick={() => setReformMode("rules")}
+                  className={reformMode === "rules" ? "bg-amex-blue px-2.5 py-1 text-white" : "px-2.5 py-1 text-slate-600"}
+                >
+                  Rule-based
+                </button>
+              </div>
+            )}
+          </div>
           <div className="flex items-center gap-2">
             <input
               value={downloadName}
@@ -221,8 +247,15 @@ export default function Results({ result, sql, fileName, wasUploaded }: Props) {
           </div>
         </div>
         <p className="mt-1 text-xs text-slate-500">
-          PII columns are wrapped with <code>sde_decrypt(&apos;SDE_TAG&apos;, col)</code>. Other ticked
-          suggestions are added as review comments. Review before running.
+          {reformMode === "ai" && hasAi ? (
+            <>AI-generated using the admin&apos;s reformed examples (RAG). Review before running.</>
+          ) : (
+            <>
+              Rule-based: PII columns wrapped with <code>sde_decrypt(&apos;SDE_TAG&apos;, col)</code>; ticked
+              suggestions added as review comments.{" "}
+              {hasAi ? "" : "Add reformed examples in /admin (and a valid Gemini key) to enable AI style."}
+            </>
+          )}
         </p>
         <pre className="mt-3 max-h-96 overflow-auto rounded-lg bg-slate-900 p-3 font-mono text-xs leading-relaxed text-slate-100">
           {reformedSql}

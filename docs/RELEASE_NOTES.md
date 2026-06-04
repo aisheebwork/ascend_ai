@@ -8,6 +8,16 @@ Versioning: `MAJOR.MINOR.PATCH` (see WORKFLOW_COMPANION_01.md).
 
 ---
 
+## 0.4.0 — 2026-06-04
+**Summary:** Example-driven (RAG) reformed SQL.
+- **Features added:** FEATURE-012 — `generateReformedSql` produces reformed BQ SQL via
+  few-shot RAG over admin reformed examples; Results page toggles AI vs rule-based.
+  Added [docs/RAG_WORKFLOW.md](RAG_WORKFLOW.md).
+- **Changed:** `/api/analyze` returns `aiReformedSql`; the reformed-SQL panel prefers the AI version when available.
+- **Important:** RAG only runs with a **valid Gemini key** (placeholder → silent fallback to rule-based).
+- **Known issues:** AI rewrite is non-deterministic — review before running (DEBT-001).
+- **Risks:** RISK-001. **Rollback:** revert to 0.3.0 (UI falls back to rule-based reform).
+
 ## 0.3.0 — 2026-06-04
 **Summary:** Admin area, reformed-SQL generator, BQ-only.
 - **Features added:** FEATURE-008 admin area (`/admin`, Google + passwordless email-link, allowlist);

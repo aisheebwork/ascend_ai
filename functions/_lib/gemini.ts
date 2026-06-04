@@ -179,5 +179,88 @@ export async function buildSuggestions(
   }
 }
 
+// ===========================================================================
+// AI reformed SQL — true example-driven RAG. Uses the admin's reformed examples
+// as few-shot guidance to rewrite THIS query in the team's preferred style.
+// Returns null if no key / no signal / on error (caller falls back to the
+// deterministic reformer). AI output must be reviewed before running.
+// ===========================================================================
+const REFORM_INSTRUCTION = `You are a BigQuery SQL rewriter for American Express.
+Rewrite the given SQL into a corrected ("reformed") version by:
+- Wrapping PII columns with the decrypt UDF using their SDE tag (e.g. sde_decrypt('NGBD-SDE-CM15', cm15)) wherever the column is used.
+- Adding partition filters where the metadata says they are required.
+- Following the STYLE of the provided reformed EXAMPLES as closely as possible.
+RULES:
+- Preserve the query's intent and logic; only apply governance fixes + the example style.
+- Output ONLY the reformed SQL. No explanations, no markdown fences.`;
+
+function stripFences(s: string): string {
+  return s.replace(/^```[a-z]*\s*/i, "").replace(/```\s*$/i, "").trim();
+}
+
+export async function generateReformedSql(
+  sql: string,
+  f: Findings,
+  examples: ReformedExample[],
+  apiKey: string | undefined
+): Promise<string | null> {
+  const hasSignal =
+    f.piiFindings.length > 0 ||
+    f.partitionFindings.some((p) => p.requirePartitionFilter && !p.presentInFilter);
+  if (!apiKey || (!hasSignal && examples.length === 0)) return null;
+
+  const prompt = [
+    REFORM_INSTRUCTION,
+    "",
+    "GOVERNANCE FINDINGS (JSON):",
+    JSON.stringify(
+      {
+        piiColumns: f.piiFindings.map((p) => ({ column: p.column, sdeTag: p.piiRoleId })),
+        partition: f.partitionFindings.map((p) => ({
+          column: p.column,
+          required: p.requirePartitionFilter,
+          present: p.presentInFilter,
+        })),
+      },
+      null,
+      2
+    ),
+    examples.length
+      ? "\nREFORMED EXAMPLES (match this style):\n" +
+        examples
+          .slice(0, 5)
+          .map(
+            (e, i) =>
+              `Example ${i + 1}: ${e.title}\n-- original:\n${(e.originalSql || "").slice(0, 1500)}\n-- reformed:\n${e.reformedSql.slice(0, 1500)}`
+          )
+          .join("\n\n")
+      : "",
+    "",
+    "SQL TO REFORM:",
+    sql.slice(0, 12000),
+    "",
+    "Reformed SQL:",
+  ].join("\n");
+
+  try {
+    const res = await fetch(GEMINI_URL(apiKey), {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        generationConfig: { temperature: 0.1 },
+      }),
+    });
+    if (!res.ok) throw new Error(`Gemini HTTP ${res.status}`);
+    const data: any = await res.json();
+    const text: string | undefined = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!text) return null;
+    const out = stripFences(text);
+    return out.length > 0 ? out : null;
+  } catch {
+    return null;
+  }
+}
+
 export { templateSuggestions };
 export type { Findings, PiiFinding, PartitionFinding };

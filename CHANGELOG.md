@@ -4,6 +4,14 @@ All notable changes to this project. Format groups: Added / Changed / Fixed /
 Deprecated / Removed / Security. Versioning: `MAJOR.MINOR.PATCH`.
 See [docs/RELEASE_NOTES.md](docs/RELEASE_NOTES.md) for detailed release notes.
 
+## [0.4.0] - 2026-06-04
+### Added
+- Example-driven (RAG) reformed SQL: `generateReformedSql` few-shot over admin
+  `reformedExamples`; `/api/analyze` returns `aiReformedSql`; Results AI/rule-based toggle.
+- `docs/RAG_WORKFLOW.md` (end-to-end RAG explanation for all audiences).
+### Notes
+- RAG/example styling requires a valid `GEMINI_API_KEY`; placeholder keys fall back to rule-based.
+
 ## [0.3.0] - 2026-06-04
 ### Added
 - Admin area `/admin` (Google + passwordless email-link, allowlist in `functions/_lib/admins.ts`).

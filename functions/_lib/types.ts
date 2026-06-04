@@ -87,6 +87,12 @@ export interface AnalysisResult {
   suggestions: Suggestion[];
   /** true when Gemini produced the suggestion text; false = templated fallback */
   geminiUsed: boolean;
+  /**
+   * Example-driven reformed SQL from Gemini (RAG over admin reformed examples).
+   * null when no key / no signal / Gemini error — UI then uses the deterministic
+   * rule-based reformer. AI output must be reviewed before running.
+   */
+  aiReformedSql?: string | null;
 }
 
 /** A reformed (corrected) BQ SQL example used to guide the RAG/Gemini layer. */
