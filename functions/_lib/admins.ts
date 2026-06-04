@@ -9,6 +9,11 @@
 export const ADMIN_EMAILS: string[] = [
   // "your.name@accenture.com",
   // "another.admin@aexp.com",
+  // example: "gojiya.piyush.dadu@accenture.com",
+  "aishee.bhattacharya@accenture.com",
+  "d.am.chakraborty@accenture.com",
+  "soumyadeep.ray@accenture.com",
+  "aisheeb.work@gmail.com",
 ];
 
 export function isAdmin(email: string | null | undefined): boolean {

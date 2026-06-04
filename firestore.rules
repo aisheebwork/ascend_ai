@@ -10,6 +10,10 @@ service cloud.firestore {
         && request.auth.token.email.lower() in [
           // 'your.name@accenture.com',
           // 'another.admin@aexp.com'
+          "aishee.bhattacharya@accenture.com",
+          "d.am.chakraborty@accenture.com",
+          "soumyadeep.ray@accenture.com",
+          "aisheeb.work@gmail.com"
         ];
     }
 
