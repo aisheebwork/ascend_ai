@@ -52,17 +52,42 @@ export default function AdminLogin() {
       return;
     }
     setBusy(true);
+    const continueUrl = `${window.location.origin}/admin`;
     try {
       await sendSignInLinkToEmail(auth, email.trim(), {
-        url: `${window.location.origin}/admin`,
+        url: continueUrl,
         handleCodeInApp: true,
       });
       window.localStorage.setItem(EMAIL_KEY, email.trim());
-      setInfo(`Sign-in link sent to ${email.trim()}. Open it on this device to continue.`);
+      setInfo(
+        `Sign-in link sent to ${email.trim()}. Open it on THIS device/browser. ` +
+          `Check spam (sender: noreply@${auth.app.options.projectId}.firebaseapp.com).`
+      );
     } catch (e: any) {
-      setError(e?.message ?? "Could not send sign-in link");
+      setError(explainAuthError(e, continueUrl));
     } finally {
       setBusy(false);
+    }
+  }
+
+  // Map common Firebase auth error codes to actionable hints.
+  function explainAuthError(e: any, continueUrl: string): string {
+    const code = e?.code ?? "";
+    const domain = new URL(continueUrl).hostname;
+    switch (code) {
+      case "auth/unauthorized-continue-uri":
+      case "auth/invalid-continue-uri":
+        return `${code}: the redirect domain "${domain}" is not authorized. In Firebase Console → Authentication → Settings → Authorized domains, add "${domain}", then try again.`;
+      case "auth/operation-not-allowed":
+        return `${code}: Email-link sign-in is not enabled. In Firebase Console → Authentication → Sign-in method, enable Email/Password AND toggle "Email link (passwordless sign-in)" ON.`;
+      case "auth/invalid-email":
+        return `${code}: that email address looks invalid.`;
+      case "auth/missing-continue-uri":
+        return `${code}: missing redirect URL (app config issue).`;
+      case "auth/admin-restricted-operation":
+        return `${code}: this operation is restricted for your project settings.`;
+      default:
+        return `${code ? code + ": " : ""}${e?.message ?? "Could not send sign-in link"}`;
     }
   }
 
@@ -87,6 +112,11 @@ export default function AdminLogin() {
         </div>
 
         <label className="text-sm font-medium text-slate-700">Email sign-in link</label>
+        <p className="mt-1 text-xs text-slate-400">
+          Requires Firebase → Authentication → <strong>Email/Password</strong> +{" "}
+          <strong>Email link</strong> enabled, and <code>{window.location.hostname}</code> in
+          Authorized domains.
+        </p>
         <div className="mt-1 flex gap-2">
           <input
             type="email"
