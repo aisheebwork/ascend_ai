@@ -4,6 +4,16 @@ All notable changes to this project. Format groups: Added / Changed / Fixed /
 Deprecated / Removed / Security. Versioning: `MAJOR.MINOR.PATCH`.
 See [docs/RELEASE_NOTES.md](docs/RELEASE_NOTES.md) for detailed release notes.
 
+## [Unreleased]
+### Added
+- Rename a saved session (tool page) and edit a reformed example (admin).
+- Delete a saved session (tool page) and delete/edit reformed examples (admin).
+- Copy button for shared BQ SQL files (admin).
+### Changed
+- Reformed SQL output is now fixed-width with line wrapping; PII `sde_decrypt(...)`
+  insertions and review comments are highlighted.
+- `firestore.rules`: `reformedExamples` now allows admin create/update/delete.
+
 ## [0.4.0] - 2026-06-04
 ### Added
 - Example-driven (RAG) reformed SQL: `generateReformedSql` few-shot over admin

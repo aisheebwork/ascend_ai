@@ -3,6 +3,7 @@ import {
   doc,
   addDoc,
   deleteDoc,
+  updateDoc,
   query,
   orderBy,
   limit,
@@ -31,6 +32,15 @@ export async function saveAnalysis(
 /** Delete one of the user's saved analyses. */
 export async function deleteAnalysis(uid: string, id: string): Promise<void> {
   await deleteDoc(doc(userAnalysesCol(uid), id));
+}
+
+/** Rename one of the user's saved analyses. */
+export async function renameAnalysis(
+  uid: string,
+  id: string,
+  fileName: string
+): Promise<void> {
+  await updateDoc(doc(userAnalysesCol(uid), id), { fileName });
 }
 
 /**

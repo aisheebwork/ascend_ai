@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import type { AnalysisResult, Severity } from "../types";
 import { buildReformedSql } from "../../functions/_lib/reformer";
 
@@ -18,6 +18,45 @@ function Badge({ ok, yes, no }: { ok: boolean; yes: string; no: string }) {
       {ok ? yes : no}
     </span>
   );
+}
+
+// Render reformed SQL with the "reformed" portions highlighted:
+// - sde_decrypt('TAG', col) insertions (PII decryption)
+// - the advisor review-comment header lines (-- ...)
+function highlightReformed(text: string): ReactNode[] {
+  const lines = text.split("\n");
+  const out: ReactNode[] = [];
+  const decryptRe = /sde_decrypt\('[^']*',\s*[^)]*\)/gi;
+
+  lines.forEach((line, li) => {
+    const isComment = /^\s*--/.test(line);
+    if (isComment) {
+      out.push(
+        <span key={`l${li}`} className="rounded bg-amber-500/25 text-amber-200">
+          {line}
+        </span>
+      );
+    } else {
+      // highlight sde_decrypt(...) spans inside the line
+      let last = 0;
+      let m: RegExpExecArray | null;
+      decryptRe.lastIndex = 0;
+      const parts: ReactNode[] = [];
+      while ((m = decryptRe.exec(line)) !== null) {
+        if (m.index > last) parts.push(line.slice(last, m.index));
+        parts.push(
+          <span key={`d${li}-${m.index}`} className="rounded bg-emerald-500/30 text-emerald-100">
+            {m[0]}
+          </span>
+        );
+        last = m.index + m[0].length;
+      }
+      if (last < line.length) parts.push(line.slice(last));
+      out.push(<span key={`l${li}`}>{parts.length ? parts : line}</span>);
+    }
+    if (li < lines.length - 1) out.push("\n");
+  });
+  return out;
 }
 
 function defaultReformedName(fileName: string, wasUploaded: boolean): string {
@@ -257,9 +296,14 @@ export default function Results({ result, sql, fileName, wasUploaded }: Props) {
             </>
           )}
         </p>
-        <pre className="mt-3 max-h-96 overflow-auto rounded-lg bg-slate-900 p-3 font-mono text-xs leading-relaxed text-slate-100">
-          {reformedSql}
+        <pre className="mt-3 h-96 w-full overflow-y-auto overflow-x-hidden whitespace-pre-wrap break-words rounded-lg bg-slate-900 p-3 font-mono text-xs leading-relaxed text-slate-100">
+          {highlightReformed(reformedSql)}
         </pre>
+        <p className="mt-1 text-xs text-slate-400">
+          Highlighted:{" "}
+          <span className="rounded bg-emerald-500/30 px-1 text-emerald-700">PII decrypt</span>{" "}
+          <span className="rounded bg-amber-500/25 px-1 text-amber-700">review comments</span>
+        </p>
       </section>
     </div>
   );

@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import { onAuthStateChanged, signOut, type User } from "firebase/auth";
 import { auth } from "./lib/firebase";
 import { analyzeSql } from "./lib/api";
-import { saveAnalysis, subscribeAnalyses, deleteAnalysis } from "./lib/analyses";
+import {
+  saveAnalysis,
+  subscribeAnalyses,
+  deleteAnalysis,
+  renameAnalysis,
+} from "./lib/analyses";
 import {
   subscribeMetadata,
   toTableMetadata,
@@ -117,6 +122,16 @@ export default function App() {
     }
   }
 
+  async function handleRenameHistory(id: string, newName: string) {
+    if (!user) return;
+    try {
+      await renameAnalysis(user.uid, id, newName);
+      if (activeId === id) setAnalyzedName(newName);
+    } catch (e: any) {
+      setError(e?.message ?? "Could not rename session");
+    }
+  }
+
   function handleSelectHistory(r: AnalysisRecord) {
     setActiveId(r.id);
     setSql(r.sqlText);
@@ -198,6 +213,7 @@ export default function App() {
           activeId={activeId}
           onSelect={handleSelectHistory}
           onDelete={handleDeleteHistory}
+          onRename={handleRenameHistory}
         />
       </main>
     </div>

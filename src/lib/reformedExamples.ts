@@ -3,6 +3,7 @@ import {
   doc,
   addDoc,
   deleteDoc,
+  updateDoc,
   query,
   orderBy,
   limit,
@@ -42,6 +43,18 @@ export async function addReformedExample(
 
 export async function deleteReformedExample(id: string): Promise<void> {
   await deleteDoc(doc(col(), id));
+}
+
+export async function updateReformedExample(
+  id: string,
+  data: ReformedExample
+): Promise<void> {
+  await updateDoc(doc(col(), id), {
+    title: data.title || "Example",
+    originalSql: data.originalSql ?? "",
+    reformedSql: data.reformedSql,
+    notes: data.notes ?? "",
+  });
 }
 
 export function subscribeReformedExamples(

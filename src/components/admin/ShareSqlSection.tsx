@@ -12,6 +12,7 @@ export default function ShareSqlSection({ userEmail }: { userEmail: string | nul
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [openId, setOpenId] = useState<string | null>(null);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
   useEffect(() => subscribeSharedSql(setDocs), []);
 
@@ -78,6 +79,17 @@ export default function ShareSqlSection({ userEmail }: { userEmail: string | nul
                     className="rounded border border-slate-300 px-2 py-1 text-xs text-slate-700 hover:bg-slate-50"
                   >
                     {openId === d.id ? "Hide" : "View"}
+                  </button>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard?.writeText(d.sqlText).then(
+                        () => setCopiedId(d.id),
+                        () => {}
+                      );
+                    }}
+                    className="rounded border border-slate-300 px-2 py-1 text-xs text-slate-700 hover:bg-slate-50"
+                  >
+                    {copiedId === d.id ? "Copied!" : "Copy"}
                   </button>
                   <button
                     onClick={() => downloadSql(d)}

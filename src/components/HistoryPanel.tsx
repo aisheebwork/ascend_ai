@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { AnalysisRecord } from "../types";
 
 interface Props {
@@ -5,13 +6,32 @@ interface Props {
   activeId: string | null;
   onSelect: (record: AnalysisRecord) => void;
   onDelete: (id: string) => void;
+  onRename: (id: string, newName: string) => void;
 }
 
 function issueCount(r: AnalysisRecord): number {
   return r.result.suggestions.filter((s) => s.severity !== "info").length;
 }
 
-export default function HistoryPanel({ records, activeId, onSelect, onDelete }: Props) {
+export default function HistoryPanel({
+  records,
+  activeId,
+  onSelect,
+  onDelete,
+  onRename,
+}: Props) {
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [draft, setDraft] = useState("");
+
+  function startRename(r: AnalysisRecord) {
+    setEditingId(r.id);
+    setDraft(r.fileName);
+  }
+  function commitRename() {
+    if (editingId && draft.trim()) onRename(editingId, draft.trim());
+    setEditingId(null);
+  }
+
   return (
     <aside className="rounded-2xl bg-white p-4 shadow-sm">
       <h3 className="text-sm font-semibold uppercase tracking-wide text-slate-500">
@@ -23,39 +43,63 @@ export default function HistoryPanel({ records, activeId, onSelect, onDelete }: 
         <ul className="mt-3 space-y-1">
           {records.map((r) => {
             const issues = issueCount(r);
+            const editing = editingId === r.id;
             return (
               <li key={r.id} className="group flex items-stretch gap-1">
-                <button
-                  onClick={() => onSelect(r)}
-                  className={`min-w-0 flex-1 rounded-lg px-3 py-2 text-left text-sm hover:bg-slate-50 ${
-                    activeId === r.id ? "bg-amex-blue/10" : ""
-                  }`}
-                >
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="truncate font-medium text-slate-700">
-                      {r.fileName}
-                    </span>
-                    {issues > 0 && (
-                      <span className="shrink-0 rounded-full bg-red-100 px-1.5 text-xs font-semibold text-red-700">
-                        {issues}
-                      </span>
-                    )}
-                  </div>
-                  <div className="text-xs text-slate-400">
-                    {new Date(r.createdAt).toLocaleString()}
-                  </div>
-                </button>
-                <button
-                  title="Delete this session"
-                  onClick={() => {
-                    if (window.confirm(`Delete "${r.fileName}"? This cannot be undone.`)) {
-                      onDelete(r.id);
-                    }
-                  }}
-                  className="shrink-0 rounded-lg px-2 text-slate-300 hover:bg-red-50 hover:text-red-600"
-                >
-                  ✕
-                </button>
+                {editing ? (
+                  <input
+                    autoFocus
+                    value={draft}
+                    onChange={(e) => setDraft(e.target.value)}
+                    onBlur={commitRename}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") commitRename();
+                      if (e.key === "Escape") setEditingId(null);
+                    }}
+                    className="min-w-0 flex-1 rounded-lg border border-amex-blue px-2 py-1.5 text-sm"
+                  />
+                ) : (
+                  <button
+                    onClick={() => onSelect(r)}
+                    className={`min-w-0 flex-1 rounded-lg px-3 py-2 text-left text-sm hover:bg-slate-50 ${
+                      activeId === r.id ? "bg-amex-blue/10" : ""
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="truncate font-medium text-slate-700">{r.fileName}</span>
+                      {issues > 0 && (
+                        <span className="shrink-0 rounded-full bg-red-100 px-1.5 text-xs font-semibold text-red-700">
+                          {issues}
+                        </span>
+                      )}
+                    </div>
+                    <div className="text-xs text-slate-400">
+                      {new Date(r.createdAt).toLocaleString()}
+                    </div>
+                  </button>
+                )}
+                {!editing && (
+                  <>
+                    <button
+                      title="Rename this session"
+                      onClick={() => startRename(r)}
+                      className="shrink-0 rounded-lg px-2 text-slate-300 hover:bg-slate-100 hover:text-slate-600"
+                    >
+                      ✎
+                    </button>
+                    <button
+                      title="Delete this session"
+                      onClick={() => {
+                        if (window.confirm(`Delete "${r.fileName}"? This cannot be undone.`)) {
+                          onDelete(r.id);
+                        }
+                      }}
+                      className="shrink-0 rounded-lg px-2 text-slate-300 hover:bg-red-50 hover:text-red-600"
+                    >
+                      ✕
+                    </button>
+                  </>
+                )}
               </li>
             );
           })}
