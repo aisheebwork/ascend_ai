@@ -1,6 +1,8 @@
 import {
   collection,
+  doc,
   addDoc,
+  deleteDoc,
   query,
   orderBy,
   limit,
@@ -24,6 +26,11 @@ export async function saveAnalysis(
     ...data,
     createdAt: serverTimestamp(),
   });
+}
+
+/** Delete one of the user's saved analyses. */
+export async function deleteAnalysis(uid: string, id: string): Promise<void> {
+  await deleteDoc(doc(userAnalysesCol(uid), id));
 }
 
 /**

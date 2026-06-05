@@ -16,6 +16,7 @@ from here (no orphan docs).
 - [REQUIREMENT_TRACEABILITY.md](REQUIREMENT_TRACEABILITY.md)
 
 ## Technical knowledge
+- [TECH_STACK.md](TECH_STACK.md) — technology actually used (and not used)
 - [RAG_WORKFLOW.md](RAG_WORKFLOW.md) — how the RAG agent works (all audiences)
 - [DATA_MODEL.md](DATA_MODEL.md)
 - [SECURITY_MODEL.md](SECURITY_MODEL.md)

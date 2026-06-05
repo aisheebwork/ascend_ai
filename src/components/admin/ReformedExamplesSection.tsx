@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   addReformedExample,
   subscribeReformedExamples,
+  deleteReformedExample,
   type ReformedExampleDoc,
 } from "../../lib/reformedExamples";
 
@@ -91,7 +92,22 @@ export default function ReformedExamplesSection({ userEmail }: { userEmail: stri
         <ul className="mt-4 space-y-2">
           {docs.map((d) => (
             <li key={d.id} className="rounded-lg border border-slate-100 p-3">
-              <div className="text-sm font-medium text-slate-800">{d.title}</div>
+              <div className="flex items-start justify-between gap-2">
+                <div className="text-sm font-medium text-slate-800">{d.title}</div>
+                <button
+                  title="Delete example"
+                  onClick={() => {
+                    if (window.confirm(`Delete example "${d.title}"?`)) {
+                      deleteReformedExample(d.id).catch((e) =>
+                        setErr(e?.message ?? "Delete failed")
+                      );
+                    }
+                  }}
+                  className="shrink-0 rounded px-2 text-xs text-slate-400 hover:bg-red-50 hover:text-red-600"
+                >
+                  ✕ Delete
+                </button>
+              </div>
               {d.notes && <div className="text-xs text-slate-500">{d.notes}</div>}
               <pre className="mt-1 max-h-40 overflow-auto rounded bg-slate-900 p-2 font-mono text-xs text-slate-100">
                 {d.reformedSql}

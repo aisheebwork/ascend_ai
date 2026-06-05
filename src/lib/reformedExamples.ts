@@ -1,6 +1,8 @@
 import {
   collection,
+  doc,
   addDoc,
+  deleteDoc,
   query,
   orderBy,
   limit,
@@ -36,6 +38,10 @@ export async function addReformedExample(
     addedByEmail: addedByEmail ?? null,
     createdAt: serverTimestamp(),
   });
+}
+
+export async function deleteReformedExample(id: string): Promise<void> {
+  await deleteDoc(doc(col(), id));
 }
 
 export function subscribeReformedExamples(

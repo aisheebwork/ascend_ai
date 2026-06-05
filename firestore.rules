@@ -40,8 +40,8 @@ service cloud.firestore {
     // as RAG context); only admins can add. No deletes.
     match /reformedExamples/{id} {
       allow read: if request.auth != null;
-      allow create: if isAdmin();
-      allow update, delete: if false;
+      allow create, delete: if isAdmin();
+      allow update: if false;
     }
   }
 }

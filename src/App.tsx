@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { onAuthStateChanged, signOut, type User } from "firebase/auth";
 import { auth } from "./lib/firebase";
 import { analyzeSql } from "./lib/api";
-import { saveAnalysis, subscribeAnalyses } from "./lib/analyses";
+import { saveAnalysis, subscribeAnalyses, deleteAnalysis } from "./lib/analyses";
 import {
   subscribeMetadata,
   toTableMetadata,
@@ -104,6 +104,19 @@ export default function App() {
     }
   }
 
+  async function handleDeleteHistory(id: string) {
+    if (!user) return;
+    try {
+      await deleteAnalysis(user.uid, id);
+      if (activeId === id) {
+        setActiveId(null);
+        setResult(null);
+      }
+    } catch (e: any) {
+      setError(e?.message ?? "Could not delete session");
+    }
+  }
+
   function handleSelectHistory(r: AnalysisRecord) {
     setActiveId(r.id);
     setSql(r.sqlText);
@@ -180,7 +193,12 @@ export default function App() {
           )}
         </div>
 
-        <HistoryPanel records={records} activeId={activeId} onSelect={handleSelectHistory} />
+        <HistoryPanel
+          records={records}
+          activeId={activeId}
+          onSelect={handleSelectHistory}
+          onDelete={handleDeleteHistory}
+        />
       </main>
     </div>
   );
